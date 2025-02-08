@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        a { text-decoration: none; padding: 5px 10px; margin: 5px; display: inline-block; }
+        .approve { background-color: green; color: white; }
+        .remove { background-color: red; color: white; }
+        .logout { background-color: black; color: white; padding: 10px; float: right; }
+    </style>
+</head>
+<body>
+
+    <h2>Admin Dashboard - User Managemnent</h2>
+    <a href="{% url 'logout' %}" class="logout">Logout</a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.fullname }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.UserRole }}</td>
+            <td>
+                {% if user.is_approved %}
+                    Approved
+                {% else %}
+                    Pending
+                {% endif %}
+            </td>
+            <td>
+                {% if not user.is_approved %}
+                    <a href="{% url 'approve_user' user.id %}" class="approve">Approve</a>
+                {% endif %}
+                <a href="{% url 'remove_user' user.id %}" class="remove">Remove</a>
+                <select onchange="location.href='{% url 'change_role' user.id 'ROLE' %}'.replace('ROLE', this.value)">
+                    <option value="dealer" {% if user.UserRole == 'dealer' %}selected{% endif %}>Dealer</option>
+                    <option value="customer" {% if user.UserRole == 'customer' %}selected{% endif %}>Customer</option>
+                    <option value="engineer" {% if user.UserRole == 'engineer' %}selected{% endif %}>Engineer</option>
+                </select>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

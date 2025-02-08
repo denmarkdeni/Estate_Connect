@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="logo">EstateConnect</div>
+        <ul class="nav-links">
+            <li><a href="{% url 'user_management' %}"><i class="fas fa-users"></i> User Management</a></li>
+            <li><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i> Notifications</a></li>
+            <li><a href="{% url 'payments' %}"><i class="fas fa-credit-card"></i> Payments</a></li>
+            <li><a href="{% url 'progress_status' %}"><i class="fas fa-tasks"></i> Progress Status</a></li>
+            <li><a href="{% url 'logout' %}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <h2>Admin Dashboard</h2>
+            <div class="admin-info">
+                <span>Welcome, Admin</span>
+            </div>
+        </header>
+
+        <section class="dashboard-overview">
+            <div class="card">
+                <h3>Total Users</h3>
+                <p>120</p>
+            </div>
+            <div class="card">
+                <h3>Pending Payments</h3>
+                <p>₹25,000</p>
+            </div>
+            <div class="card">
+                <h3>Active Projects</h3>
+                <p>15</p>
+            </div>
+            <div class="card">
+                <h3>Notifications</h3>
+                <p>8 New</p>
+            </div>
+        </section>
+    </div>
+</div>
+
+</body>
+</html>
+puiuio

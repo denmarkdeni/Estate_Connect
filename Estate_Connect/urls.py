@@ -21,4 +21,11 @@ from Estate_App import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
+    path('register/', views.register_view, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('approve/<int:user_id>/', views.approve_user, name='approve_user'),
+    path('remove/<int:user_id>/', views.remove_user, name='remove_user'),
+    path('change-role/<int:user_id>/<str:role>/', views.change_role, name='change_role'),
+    path('logout/', views.logout_view, name='logout'),
 ]
