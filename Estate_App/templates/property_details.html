@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ property.title }}</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <h2>{{ property.title }}</h2>
+    <img src="{{ property.image.url }}" alt="{{ property.title }}" width="300"><br>
+    <p><strong>Price:</strong> ${{ property.price }}</p>
+    <p><strong>Location:</strong> {{ property.location }}</p>
+    <p><strong>Description:</strong> {{ property.description }}</p>
+    <a href="{% url 'request_modification' property.id %}">Request Modification</a><br><br>
+
+    <a href="{% url 'customer_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

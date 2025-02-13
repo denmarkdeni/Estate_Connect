@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <h2>Update Profile</h2>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <label>Phone:</label>
+        <input type="text" name="phone" value="{{ dealer.phone|default:engineer.phone }}" required><br>
+
+        <label>Address:</label>
+        <textarea name="address" required>{{ dealer.address|default:'' }}</textarea><br>
+
+        {% if dealer %}
+            <label>Company Name:</label>
+            <input type="text" name="company_name" value="{{ dealer.company_name }}" required><br>
+        {% elif engineer %}
+            <label>Expertise:</label>
+            <input type="text" name="expertise" value="{{ engineer.expertise }}" required><br>
+        {% endif %}
+
+        <button type="submit">Update Profile</button>
+    </form>
+
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

@@ -17,15 +17,38 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Estate_App import views
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
-    path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('login_register/', views.login_register, name='login_register'),
+    path('Admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('manage_users/', views.manage_users, name='manage_users'),
     path('approve/<int:user_id>/', views.approve_user, name='approve_user'),
     path('remove/<int:user_id>/', views.remove_user, name='remove_user'),
     path('change-role/<int:user_id>/<str:role>/', views.change_role, name='change_role'),
     path('logout/', views.logout_view, name='logout'),
+    path('dealer-dashboard/', views.dealer_dashboard, name='dealer_dashboard'),
+    path('upload/', views.upload_property, name='upload_property'),
+    path('api/properties/', views.property_list, name='property_list'),
+    path('api/properties/create/', views.property_create, name='property_create'),
+    path('customer/dashboard/', views.customer_dashboard, name='customer_dashboard'),
+    path('property/<int:property_id>/', views.property_details, name='property_details'),
+    path('request-modification/<int:property_id>/', views.request_modification, name='request_modification'),
+    path('dealer/manage-requests/', views.dealer_manage_requests, name='dealer_manage_requests'),
+    path('engineer/dashboard/', views.engineer_dashboard, name='engineer_dashboard'),
+    path('update-profile/', views.update_profile, name='update_profile'),
+    path('admin/verify-users/', views.verify_users, name='verify_users'),
+]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

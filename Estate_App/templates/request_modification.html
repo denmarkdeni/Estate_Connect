@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Modification</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <h2>Request Modification for {{ property.title }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Describe your modification request:</label><br>
+        <textarea name="description" required></textarea><br>
+        <button type="submit">Submit Request</button>
+    </form>
+    <a href="{% url 'customer_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

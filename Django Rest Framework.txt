@@ -1,0 +1,43 @@
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczOTQyNDk0MSwiaWF0IjoxNzM5MzM4NTQxLCJqdGkiOiIwMjdmZmQ3NDQ0NzM0NTJhOTRmMmEyMjVjYTZmNzFmMyIsInVzZXJfaWQiOjJ9.vcsUN7AcOBb8wUU20MaprD9Bc8lHOK3Z_bkBmGlVabQ",
+    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5MzM4ODQxLCJpYXQiOjE3MzkzMzg1NDEsImp0aSI6ImExYjZiY2ZkMDdhZDRlOGM5NmQyYTY5NzA4ZGZhMmExIiwidXNlcl9pZCI6Mn0.wusiJcPxkIcSKaRRwjiRh5d6RsfCa0XVpvWx9XAcfs0"
+}
+
+
+
+
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5MzM5NzUxLCJpYXQiOjE3MzkzMzk0NTEsImp0aSI6ImNkMzdjN2VmYmNmMTQ1NThiZWZhNDBkNDI0YjgxY2UyIiwidXNlcl9pZCI6Mn0.peejgN7XdwVb29avsiqe0Bd8Y3kaX4OPclu_91p8MmY" http://127.0.0.1:8000/api/properties/
+
+
+curl -X POST http://127.0.0.1:8000/api/token/ -d "username=admin&password=123"
+
+
+image=@C:\Users\Admin\Desktop\Maria Deniston\ForensicAi\Forensic_App\static\images\face.jpg
+
+
+
+{
+    "title": "Luxury Villa",
+    "price": 250000,
+    "location": "New York",
+    "dealer": 4,
+    "title": "madi veedu",
+    "description": "one room one kitchen",
+    "image": "image=@C:/Users/Admin/Desktop/Maria Deniston/ForensicAi/Forensic_App/static/images/face.jpg",
+}
+
+
+curl -X POST http://127.0.0.1:8000/api/properties/create/ ^
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5MzQxNDIxLCJpYXQiOjE3MzkzMzg1NDEsImp0aSI6IjM5NTNlZTQ0NGVhMDQwZGI5ZDZhZWEzYjQyOWM0ZWIyIiwidXNlcl9pZCI6Mn0.scakzQeUL4vH7Htq-tmeUzzCpOrhVVh_GwRi4iXdkCA" ^
+     -H "Content-Type: multipart/form-data" ^
+     -F "title=Luxury Villa" ^
+     -F "price=250000" ^
+     -F "location=New York" ^
+     -F "description=nothing" ^
+     -F "image=@C:/Users/Admin/Desktop/Maria Deniston/ForensicAi/Forensic_App/static/images/face.jpg" ^
+     -F "dealer=4"
+
+
+
+
+

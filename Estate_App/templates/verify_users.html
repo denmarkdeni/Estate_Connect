@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Users</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <h2>Pending Verifications</h2>
+
+    <h3>Dealers</h3>
+    <ul>
+        {% for dealer in dealers %}
+            <li>
+                <strong>{{ dealer.user.username }}</strong> - {{ dealer.company_name }}<br>
+                Phone: {{ dealer.phone }} | Address: {{ dealer.address }}<br>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ dealer.id }}">
+                    <input type="hidden" name="role" value="dealer">
+                    <button type="submit" name="action" value="approve">Approve</button>
+                    <button type="submit" name="action" value="reject">Reject</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Engineers</h3>
+    <ul>
+        {% for engineer in engineers %}
+            <li>
+                <strong>{{ engineer.user.username }}</strong> - Expertise: {{ engineer.expertise }}<br>
+                Phone: {{ engineer.phone }}<br>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ engineer.id }}">
+                    <input type="hidden" name="role" value="engineer">
+                    <button type="submit" name="action" value="approve">Approve</button>
+                    <button type="submit" name="action" value="reject">Reject</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

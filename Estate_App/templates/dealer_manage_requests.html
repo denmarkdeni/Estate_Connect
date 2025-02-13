@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Modification Requests</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <h2>Manage Modification Requests</h2>
+    <ul>
+        {% for request in requests %}
+            <li>
+                <strong>{{ request.property.title }}</strong> - Requested by {{ request.customer.username }} <br>
+                Status: {{ request.status }}<br>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="request_id" value="{{ request.id }}">
+                    <label>Assign Engineer:</label>
+                    <select name="engineer_id">
+                        {% for engineer in engineers %}
+                            <option value="{{ engineer.id }}">{{ engineer.username }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Assign</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

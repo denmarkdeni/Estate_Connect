@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - EstateConnect</title>
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+
 </head>
 <body>
 
@@ -15,11 +17,11 @@
     <nav class="sidebar">
         <div class="logo">EstateConnect</div>
         <ul class="nav-links">
-            <li><a href="{% url 'user_management' %}"><i class="fas fa-users"></i> User Management</a></li>
-            <li><a href="{% url 'notifications' %}"><i class="fas fa-bell"></i> Notifications</a></li>
-            <li><a href="{% url 'payments' %}"><i class="fas fa-credit-card"></i> Payments</a></li>
-            <li><a href="{% url 'progress_status' %}"><i class="fas fa-tasks"></i> Progress Status</a></li>
-            <li><a href="{% url 'logout' %}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="/manage_users"><i class="fas fa-users"></i> User Management</a></li>
+            <li><a href="#"><i class="fas fa-bell"></i> Notifications</a></li>
+            <li><a href="#"><i class="fas fa-credit-card"></i> Payments</a></li>
+            <li><a href="#"><i class="fas fa-tasks"></i> Progress Status</a></li>
+            <li><a href="/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </nav>
 
@@ -35,7 +37,7 @@
         <section class="dashboard-overview">
             <div class="card">
                 <h3>Total Users</h3>
-                <p>120</p>
+                <p>{{ users_count }}</p>
             </div>
             <div class="card">
                 <h3>Pending Payments</h3>
@@ -55,4 +57,3 @@
 
 </body>
 </html>
-puiuio
