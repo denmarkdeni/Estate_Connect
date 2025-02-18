@@ -1,3 +1,5 @@
+{% load socialaccount %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,5 +19,7 @@
         <button type="submit" class="btn">Login</button>
     </form>
     <a href="/register">Register</a>
+    <a href="{% provider_login_url 'google' %}?next=/customer/dashboard/">Login with Google</a>
+
 </body>
 </html>
