@@ -55,6 +55,7 @@ class Property(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     location = models.CharField(max_length=255)
     image = models.ImageField(upload_to='property_images/', blank=True, null=True)
+    model_3d = models.FileField(upload_to='models/', null=True, blank=True) 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
     created_at = models.DateTimeField(auto_now_add=True)
 

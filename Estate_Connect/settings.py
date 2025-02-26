@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    "corsheaders",
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -55,7 +56,7 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 2  # Set this to match your Django site
 
 LOGIN_REDIRECT_URL = 'customer/dashboard/'  # Redirect after login
-LOGOUT_REDIRECT_URL = 'login/'  # Redirect after logout
+LOGOUT_REDIRECT_URL = '/login/'  # Redirect after logout
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'Estate_Connect.urls'
@@ -164,3 +166,5 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
+
+CORS_ALLOW_ALL_ORIGINS = True  # Only for development

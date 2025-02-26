@@ -107,6 +107,7 @@
                 <img src="{{ property.image.url }}" alt="{{ property.title }}" width="150"><br>
                 <p>{{ property.location }}</p>
                 <a href="{% url 'property_details' property.id %}">View Details</a>
+                <a href="{% url 'model_3d' %}">3D MODEL</a>
             </li>
         {% empty %}
             <p>No properties found.</p>

@@ -310,3 +310,6 @@ def property_create(request):
         serializer.save(dealer=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def model_3d(request):
+    return render(request, 'model_3d.html')
