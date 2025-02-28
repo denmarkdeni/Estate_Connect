@@ -45,7 +45,9 @@ urlpatterns = [
     path('engineer/dashboard/', views.engineer_dashboard, name='engineer_dashboard'),
     path('update-profile/', views.update_profile, name='update_profile'),
     path('admin/verify-users/', views.verify_users, name='verify_users'),
-    path('model_3d/', views.model_3d, name='model_3d'),
+    path('model_3d/', views.model_3d, name='model_3d'),  
+    path('generate-plan/', views.generate_plan, name='generate_plan'),  
+    path("floor-plan/", views.floor_plan_view, name="floor_plan"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

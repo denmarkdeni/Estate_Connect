@@ -111,3 +111,11 @@ class AdminReview(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.status}"
+
+class FloorPlan(models.Model):
+    name = models.CharField(max_length=100)
+    svg_data = models.TextField()  # Stores the SVG as text
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

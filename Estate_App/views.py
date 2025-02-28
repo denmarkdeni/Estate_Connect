@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from .models import UserInfo, Property, PropertyModification, Dealer, Engineer
+from .models import UserInfo, Property, PropertyModification, Dealer, Engineer,FloorPlan
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
@@ -10,6 +11,7 @@ from rest_framework import status
 from .serializers import PropertySerializer
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from .floor_plan import generate_floor_plan ,generate_dynamic_floor_plan,generate_realistic_floor_plan
 
 def index(request):
     return render(request,'index.html')
@@ -313,3 +315,21 @@ def property_create(request):
 
 def model_3d(request):
     return render(request, 'model_3d.html')
+
+def generate_plan(request):
+    return render(request, 'floor_plan.html')
+
+def floor_plan_view(request):
+    """Render SVG floor plan based on user input."""
+#     rooms = int(request.GET.get("rooms", 2))
+#     room_width = int(request.GET.get("room_width", 100))
+#     room_height = int(request.GET.get("room_height", 100))
+# rooms, room_width, room_height
+
+    svg = generate_realistic_floor_plan()
+
+    # Save to Database
+    plan = FloorPlan.objects.create(name="Generated Plan", svg_data=svg)
+    plan.save()
+
+    return HttpResponse(svg, content_type="image/svg+xml")

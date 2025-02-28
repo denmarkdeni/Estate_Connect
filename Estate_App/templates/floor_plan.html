@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Generate Floor Plan</title>
+</head>
+<body>
+    <h1>2D Floor Plan Generator</h1>
+    
+    <form method="GET" action="{% url 'floor_plan' %}">
+        <label>Number of Rooms:</label>
+        <input type="number" name="rooms" value="2" min="1" required><br><br>
+
+        <label>Room Width:</label>
+        <input type="number" name="room_width" value="100" required><br><br>
+
+        <label>Room Height:</label>
+        <input type="number" name="room_height" value="100" required><br><br>
+
+        <button type="submit">Generate</button>
+    </form>
+
+    <h2>Generated Floor Plan</h2>
+    <object type="image/svg+xml" data="{% url 'floor_plan' %}?rooms=2&room_width=100&room_height=100" width="600" height="400"></object>
+</body>
+</html>
