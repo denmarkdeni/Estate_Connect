@@ -48,6 +48,7 @@ urlpatterns = [
     path('model_3d/', views.model_3d, name='model_3d'),  
     path('generate-plan/', views.generate_plan, name='generate_plan'),  
     path("floor-plan/", views.floor_plan_view, name="floor_plan"),
+    path('api/floorplan/<int:plan_id>/', views.api_floorplan, name='api_floorplan'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

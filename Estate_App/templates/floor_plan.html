@@ -1,25 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Generate Floor Plan</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG to 3D Conversion</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        canvas { display: block; margin: auto; }
+    </style>
 </head>
 <body>
-    <h1>2D Floor Plan Generator</h1>
-    
+    <h1>Convert SVG to 3D</h1>
+
     <form method="GET" action="{% url 'floor_plan' %}">
-        <label>Number of Rooms:</label>
-        <input type="number" name="rooms" value="2" min="1" required><br><br>
-
-        <label>Room Width:</label>
-        <input type="number" name="room_width" value="100" required><br><br>
-
-        <label>Room Height:</label>
-        <input type="number" name="room_height" value="100" required><br><br>
+        <label for="rooms">Number of Rooms:</label>
+        <input type="number" id="rooms" name="rooms" value="2" min="1" required><br><br>
 
         <button type="submit">Generate</button>
+        <button type="button" onclick="loadSVG(3)">Load SVG</button>
     </form>
 
-    <h2>Generated Floor Plan</h2>
-    <object type="image/svg+xml" data="{% url 'floor_plan' %}?rooms=2&room_width=100&room_height=100" width="600" height="400"></object>
+    <div id="container"></div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "/static/js/three.module.min.js",
+                "three/examples/jsm/loaders/SVGLoader.js": "/static/js/SVGLoader.js"
+            }
+        }
+    </script>    
+
+    <!-- Three.js & SVGLoader -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
+
+        function renderSVGInThreeJS(svgData) {
+            // **Scene, Camera, and Renderer**
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById("container").appendChild(renderer.domElement);
+        
+            // **Load SVG**
+            const loader = new SVGLoader();
+            const svg = loader.parse(svgData);
+        
+            let group = new THREE.Group();
+        
+            // **Go through each shape and extrude it**
+            svg.paths.forEach((path, index) => {
+                const shapes = path.toShapes(true);
+                const material = new THREE.MeshStandardMaterial({ color: Math.random() * 0xffffff });
+        
+                shapes.forEach((shape) => {
+                    let extrudeSettings = { depth: 5, bevelEnabled: false };
+                    if (index === 0) extrudeSettings.depth = 500; // Walls (Deeper)
+                    if (index === 1) extrudeSettings.depth = 500; // Roof (Shallower)
+                    if (index === 2) extrudeSettings.depth = 100;  // Door (Thin)
+                    if (index >= 3) extrudeSettings.depth = 100;  // Windows (Thin)
+        
+                    let geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+                    let mesh = new THREE.Mesh(geometry, material);
+                    group.add(mesh);
+                });
+            });
+        
+            // **Center & Scale**
+            const bbox = new THREE.Box3().setFromObject(group);
+            const center = bbox.getCenter(new THREE.Vector3());
+            const size = bbox.getSize(new THREE.Vector3());
+            group.position.set(-center.x, -center.y, -center.z);
+            const scaleFactor = Math.min(100 / size.x, 100 / size.y, 100 / size.z); // Adjust size
+            group.scale.set(scaleFactor, -scaleFactor, scaleFactor);
+        
+            scene.add(group);
+        
+            // **Lighting**
+            const light = new THREE.DirectionalLight(0xffffff, 2);
+            light.position.set(50, 50, 50);
+            scene.add(light);
+        
+            // **Camera**
+            camera.position.set(50, 100, 150);
+            camera.lookAt(50, 0, 50);
+        
+            // **Animation**
+            function animate() {
+                requestAnimationFrame(animate);
+                group.rotation.y += 0.01; // Rotate slowly
+                renderer.render(scene, camera);
+            }
+            animate();
+        }           
+
+        window.loadSVG = async function loadSVG(planId) {
+            const response = await fetch(`/api/floorplan/${planId}/`);
+            const data = await response.json();
+            if (data.svg) {
+                renderSVGInThreeJS(data.svg);
+            } else {
+                console.error("Failed to load SVG");
+            }
+        }
+    </script>
+
 </body>
 </html>

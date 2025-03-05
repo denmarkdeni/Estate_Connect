@@ -12,6 +12,7 @@ from .serializers import PropertySerializer
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from .floor_plan import generate_floor_plan ,generate_dynamic_floor_plan,generate_realistic_floor_plan
+from django.http import JsonResponse
 
 def index(request):
     return render(request,'index.html')
@@ -333,3 +334,10 @@ def floor_plan_view(request):
     plan.save()
 
     return HttpResponse(svg, content_type="image/svg+xml")
+
+def api_floorplan(request, plan_id):
+    try:
+        floor_plan = FloorPlan.objects.get(id=plan_id)
+        return JsonResponse({"svg": floor_plan.svg_data})
+    except FloorPlan.DoesNotExist:
+        return JsonResponse({"error": "Plan not found"}, status=404)
