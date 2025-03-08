@@ -20,6 +20,7 @@ from Estate_App import views
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from Estate_App.floor_plan import generate_blueprint, generate_3d
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +28,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
-    path('login_register/', views.login_register, name='login_register'),
     path('Admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('manage_users/', views.manage_users, name='manage_users'),
     path('approve/<int:user_id>/', views.approve_user, name='approve_user'),
@@ -49,6 +49,9 @@ urlpatterns = [
     path('generate-plan/', views.generate_plan, name='generate_plan'),  
     path("floor-plan/", views.floor_plan_view, name="floor_plan"),
     path('api/floorplan/<int:plan_id>/', views.api_floorplan, name='api_floorplan'),
+    path('generate-blueprint/', generate_blueprint, name='generate_blueprint'),
+    path('blueprint/', views.blueprint, name='blueprint'),
+    path("generate-3d/", generate_3d, name="generate_3d"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

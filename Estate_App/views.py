@@ -26,11 +26,16 @@ def register_view(request):
         role = request.POST['UserRole']
 
         if User.objects.filter(username=username).exists():
-            return render(request, 'register.html', {'error': 'Username already exists'})
+            messages.error(request, 'Username already exists.')
+            return redirect('register')
+        
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already exists.')
+            return redirect('register')
         
         user = User.objects.create_user( email=email, password=password, username=username )
         UserInfo.objects.create( user =user, fullname=fullname, UserRole=role)
-        
+        messages.success(request, 'Your account has been created successfully!')
         return redirect('login')
 
     return render(request, 'register.html')
@@ -43,6 +48,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
+            messages.success(request, 'Signed In successfully!')
             if user.is_superuser:
                 return redirect('admin_dashboard')
             if user.userinfo.UserRole == "dealer":
@@ -52,46 +58,17 @@ def login_view(request):
             if user.userinfo.UserRole == "engineer":
                 return redirect('engineer_dashboard')
         else:
-            return render(request, 'login.html', {'error': 'Invalid credentials'})
+            messages.error(request, 'Invalid username or password')
+            return redirect('login')
 
     return render(request, 'login.html')
 
-def login_register(request):
-    if request.method == "POST":
-        action = request.POST.get("action")  # Check whether login or register
-
-        # 🔹 Handling Registration
-        if action == "register":
-            username = request.POST.get("username")
-            email = request.POST.get("email")
-            password = request.POST.get("password")
-
-            if User.objects.filter(username=username).exists():
-                messages.error(request, "Username already exists.")
-            else:
-                user = User.objects.create_user(username=username, email=email, password=password)
-                user.save()
-                messages.success(request, "Registration successful! You can now log in.")
-
-        # 🔹 Handling Login
-        elif action == "login":
-            username = request.POST.get("username")
-            password = request.POST.get("password")
-            user = authenticate(request, username=username, password=password)
-
-            if user is not None:
-                login(request, user)
-                return redirect("dashboard")  # Redirect to a dashboard page
-            else:
-                messages.error(request, "Invalid Username or Password!")
-
-    return render(request, "login_register.html")
-
 @login_required
 def admin_dashboard(request):
-    users = UserInfo.objects.exclude(UserRole='admin')  # Exclude admin itself
+    person = User.objects.get(id=request.user.id)
+    users = UserInfo.objects.exclude(UserRole='admin')  
     users_count = users.count()
-    return render(request, 'admin_dashboard.html', {'users': users,'users_count':users_count})
+    return render(request, 'admin_dashboard.html', {'users': users,'users_count':users_count,'person':person})
 
 def manage_users(request):
     users = UserInfo.objects.exclude(UserRole='admin') 
@@ -319,6 +296,9 @@ def model_3d(request):
 
 def generate_plan(request):
     return render(request, 'floor_plan.html')
+
+def blueprint(request):
+    return render(request, 'blueprint_form.html')
 
 def floor_plan_view(request):
     """Render SVG floor plan based on user input."""

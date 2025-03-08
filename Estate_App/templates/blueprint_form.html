@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dynamic Floor Plan</title>
+    <style>
+        #blueprint {
+            width: 90%;
+            height: 600px;
+            overflow: auto;
+            border: 2px solid #000;
+            background: #f0f0f0;
+        }
+
+        svg {
+            display: block;
+            margin: auto;
+        }
+
+        #threeDContainer {
+            width: 90%;
+            height: 600px;
+            border: 2px solid #000;
+            display: none; /* Hidden initially */
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <h1>Generate Your Custom Floor Plan</h1>
+
+    <form method="get" action="{% url 'generate_blueprint' %}">
+        <div id="rooms-container">
+            <div class="room-input">
+                <label>Room Name: <input type="text" name="name" value="Living Room" required></label>
+                <label>Width: <input type="number" name="width" value="200" required></label>
+                <label>Height: <input type="number" name="height" value="150" required></label>
+                <label>X: <input type="number" name="x" value="50" required></label>
+                <label>Y: <input type="number" name="y" value="50" required></label>
+            </div>
+        </div>
+
+        <button type="button" onclick="addRoom()">Add Another Room</button>
+        <button type="submit">Generate</button>
+    </form>
+
+    <h2>Floor Plan Preview</h2>
+    <div id="blueprint">
+        {{ svg_data|safe }}
+    </div>
+
+    <br>
+
+    <!-- Button to View in 3D -->
+    <button onclick="view3D()">View 3D</button>
+
+    <!-- 3D Container -->
+    <div id="threeDContainer"></div>
+
+    <script>
+    function addRoom() {
+        let container = document.getElementById("rooms-container");
+        let index = container.children.length; 
+        let roomHTML = `
+            <div class="room-input">
+                <label>Room Name: <input type="text" name="name" value="Room ${index + 1}" required></label>
+                <label>Width: <input type="number" name="width" value="200" required></label>
+                <label>Height: <input type="number" name="height" value="150" required></label>
+                <label>X: <input type="number" name="x" value="${150 + index * 50}" required></label>
+                <label>Y: <input type="number" name="y" value="${150 + index * 50}" required></label>
+            </div>
+        `;
+        container.insertAdjacentHTML("beforeend", roomHTML);
+    }
+
+    function view3D() {
+        fetch("{% url 'generate_3d' %}?" + new URLSearchParams(new FormData(document.querySelector('form'))))
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("threeDContainer").style.display = "block";
+            render3D(data.rooms);
+        });
+    }
+
+    function render3D(rooms) {
+        const container = document.getElementById("threeDContainer");
+        container.innerHTML = ""; // Clear previous content
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+
+        rooms.forEach(room => {
+            const cube = new THREE.Mesh(new THREE.BoxGeometry(room.width / 10, 50, room.height / 10), material);
+            cube.position.set(room.x / 10, 25, room.y / 10);
+            scene.add(cube);
+        });
+
+        camera.position.set(0, 100, 200);
+        camera.lookAt(0, 0, 0);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    }
+    </script>
+
+</body>
+</html>

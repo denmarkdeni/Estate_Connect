@@ -1,31 +1,738 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EstateConnect</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+	<title>Estate Connect </title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="author" content="TemplatesJungle">
+	<meta name="keywords" content="Free HTML Template">
+	<meta name="description" content="Free HTML Template">
+
+	<link rel="stylesheet" type="text/css" href="{% static 'icomoon/icomoon.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/vendor.css' %}">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+		rel="stylesheet">
+		<style>
+			.background-video-container {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* You can change this based on your needs */
+  overflow: hidden;
+}
+
+.background-video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This ensures the video covers the entire container */
+  z-index: -1; /* Makes sure the video stays in the background */
+}
+
+.content {
+  position: relative;
+  z-index: 1; /* Keeps the content above the video */
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+
+		</style>
 </head>
-<body>
-    <header>
-        <h1>Welcome to EstateConnect</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Properties</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="/register">Register</a></li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/login_register">New</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <h2>Find Your Dream Property</h2>
-        <p>Connecting you with the best real estate dealers and property listings.</p>
-    </main>
-    <footer>
-        <p>&copy; 2025 EstateConnect. All rights reserved.</p>
-    </footer>
+
+<body style="background:black">
+	<div class="preloader"></div>
+
+	<div class="nav nav-overlay">
+	  <div class="nav__content">
+		<div class="container">
+		  <div class="row p-4 p-md-0 flex-column flex-md-row g-md-5 nav__block">
+			<div class="col-md-12 col-lg-5 d-flex justify-content-center justify-content-md-start">
+			  <ul class="nav__list d-none d-md-block">
+				<li class="nav__list-item active-nav">
+				  <a href="index.html" class="hover-target">Home</a>
+				</li>
+				<li class="nav__list-item">
+				  <a href="{% url 'admin_dashboard' %}" class="hover-target">Admin</a>
+				</li>
+				<li class="nav__list-item">
+				  <a href="styles.html" class="hover-target">Styles</a>
+				</li>
+				<li class="nav__list-item">
+				  <a href="blog.html" class="hover-target">Blog</a>
+				</li>
+				<li class="nav__list-item">
+				  <a href="single-post.html" class="hover-target">Single Post</a>
+				</li>
+				<li class="nav__list-item">
+				  <a href="contact.html" class="hover-target">Contact Us</a>
+				</li>
+				<li class="nav__list-item">
+					<a href="{% url 'login' %}" class="hover-target">login</a>
+				  </li>
+			  </ul>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+<!-- 	  
+					<div class="col-md-4 text-white">
+						<h3 class="text-white fw-bold nav__block-item">Contact info</h3>
+						<p class="text-light nav__block-item">Officia nisi corrupti eaque cumque exercitationem labore
+							sint sapiente rem neque temporibus id ratione perspiciatis, tenetur est repellendus
+							aspernatur culpa repudiandae omnis.</p>
+						<ul class="list-unstyled text-light nav__block-item">
+							<li class="menu-item">
+								<i class="icon icon-location me-2"></i>2489 Locust Court, Los Angeles
+							</li>
+							<li class="menu-item">
+								<i class="icon icon-location2 me-2"></i>3927 Red Maple Drive, Los Angeles
+							</li>
+							<li class="menu-item">
+								<i class="icon icon-phone me-2"></i>+63 667 341 3463
+							</li>
+							<li class="menu-item">
+								<i class="icon icon-envelope-o me-2"></i><a href="#"
+									class="text-white">contact@example.com</a>
+							</li>
+						</ul>
+					</div>
+					<div class="col-md-3 text-white">
+						<h3 class="text-white fw-bold nav__block-item">Pages</h3>
+						<ul class="list-unstyled nav__block-item">
+							<li><a href="" class="text-white">Onepage</a></li>
+							<li><a href="" class="text-white">Styles</a></li>
+							<li><a href="" class="text-white">Blog</a></li>
+							<li><a href="" class="text-white">Single Post</a></li>
+							<li><a href="" class="text-white">Contact Us</a></li>
+							<li><a href="" class="text-white">Portfolio Masonry</a></li>
+							<li><a href="" class="text-white">Portfolio Grid</a></li>
+							<li><a href="" class="text-white">Single Portfolio</a></li>
+							<li><a href="" class="text-white">About Us</a></li>
+							<li><a href="" class="text-white">Our Team</a></li>
+						</ul>
+					</div> -->
+
+		
+	
+
+	<div class="side-nav-bar">
+		<input id="menu-toggle" type="checkbox" />
+		<label class="menu-btn" for="menu-toggle">
+			<span></span>
+		</label>
+	</div>
+
+	{% load static %}
+	<section id="intro" class="scrollspy-section">
+		<div class="main-slider">
+			
+			<!-- First Slider Item with Video Background -->
+			<div class="slider-item jarallax" data-speed="0.2">
+				<div class="background-video-container">
+					<video autoplay loop muted>
+						<source src="/static/images/rfan.mp4" type="video/mp4">
+						Your browser does not support the video tag.
+					</video>
+					<div class="content">
+						<!-- Your content goes here -->
+					</div>
+				</div>
+				<div class="banner-content">
+					<h2 class="banner-title txt-fx" style="color: rgb(242, 252, 251);">AI Construction</h2>
+					<div class="btn-wrap">
+						<a href="/login" class="btn-with-line">View Project</a>
+					</div>
+				</div><!-- .banner-content -->
+			</div><!-- .slider-item -->
+	
+			
+		<!-- Navigation Buttons -->
+		<div class="button-container">
+			<button class="prev slick-arrow">
+				<i class="icon icon-chevron-thin-left"></i>
+			</button>
+			<button class="next slick-arrow">
+				<i class="icon icon-chevron-thin-right"></i>
+			</button>
+		</div>
+	</section>
+	
+
+	<section id="about" class="scrollspy-section padding-xlarge">
+		<div class="container">
+			<div class="row">
+
+				<div class="col-md-12">
+
+					<div class="section-header">
+						<div class="title">
+							<span>who are we</span>
+						</div>
+						<h2 class="section-title" style="color:rgb(255, 255, 255)">About Us</h2>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+
+				<div class="col-md-6">
+					<figure class="jarallax-keep-img">
+						<img src="{% static 'images/sm.jpg' %}" alt="about us" class="jarallax-img single-image">
+					</figure>
+				</div>
+				<div class="col-md-6 description text-lead">
+					<p><strong>At AI Construction, we believe that every structure tells a story, and we are committed to building spaces that inspire, endure, and enhance communities. With 1 years of experience in the construction industry, we specialize in residential, commercial, and industrial projects, bringing innovative solutions and superior craftsmanship to every build.
+
+						Our success is driven by a team of highly skilled professionals, including architects, engineers, project managers, and tradespeople who share a passion for quality construction. We leverage cutting-edge technology, advanced building techniques, and sustainable practices to ensure every project is completed efficiently, safely, and to the highest industry standards.
+					<div class="btn-wrap">
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+
+	<section id="portfolio" class="scrollspy-section bg-dark padding-large">
+		<div class="container">
+
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="section-header">
+						<div class="title">
+							<span>Some of Our Works</span>
+						</div>
+						<h2 class="section-title" style="color:rgb(0, 229, 255)">our projects</h2>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div id="filters" class="button-group d-flex flex-wrap gap-4 py-5" data-aos="fade-up">
+					<a href="#" class="btn btn-outline-light rounded-pill text-uppercase is-checked"
+						data-filter=".design">Design</a>
+					<a href="#" class="btn btn-outline-light rounded-pill text-uppercase"
+						data-filter=".interior">Interior</a>
+					<a href="#" class="btn btn-outline-light rounded-pill text-uppercase"
+						data-filter=".landscape">Landscape</a>
+					<a href="#" class="btn btn-outline-light rounded-pill text-uppercase"
+						data-filter=".construction">Construction</a>
+				</div>
+
+			</div>
+
+			<div class="grid p-0 clearfix row row-cols-2 row-cols-lg-3 row-cols-xl-3" data-aos="fade-up">
+				<div class="col mb-4 portfolio-item construction interior">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 1.">
+						<img src="{% static 'images/portfolio-thumb-1.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item construction construction">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 2.">
+						<img src="{% static 'images/portfolio-thumb-2.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item construction">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 3.">
+						<img src="{% static 'images/portfolio-thumb-11.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item construction">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 4.">
+						<img src="{% static 'images/portfolio-thumb-4.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item interior">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 5.">
+						<img src="{% static 'images/portfolio-large-2.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item design">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 6.">
+						<img src="{% static 'images/portfolio-thumb-6.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item design">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 7.">
+						<img src="{% static 'images/portfolio-thumb-7.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item design">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 8.">
+						<img src="{% static 'images/portfolio-thumb-8.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item design">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 9.">
+						<img src="{% static 'images/portfolio-thumb-9.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item design">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 10.">
+						<img src="{% static 'images/portfolio-thumb-10.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item design">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 11.">
+						<img src="{% static 'images/portfolio-thumb-11.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item construction">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 12.">
+						<img src="{% static 'images/portfolio-thumb-2.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item interior">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 13.">
+						<img src="{% static 'images/portfolio-thumb-3.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item landscape">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 14.">
+						<img src="{% static 'images/portfolio-thumb-8.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item landscape">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 15.">
+						<img src="{% static 'images/portfolio-thumb-1.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item interior">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 16.">
+						<img src="{% static 'images/portfolio-thumb-4.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item interior">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 17.">
+						<img src="{% static 'images/portfolio-thumb-1.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item interior">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 18.">
+						<img src="{% static 'images/portfolio-thumb-6.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item landscape">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 19.">
+						<img src="{% static 'images/portfolio-thumb-7.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item landscape">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 20.">
+						<img src="{% static 'images/portfolio-thumb-8.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item landscape">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 21.">
+						<img src="{% static 'images/portfolio-thumb-10.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item construction">
+					<a href="{% static 'images/portfolio-large-1.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 22.">
+						<img src="{% static 'images/portfolio-thumb-11.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+				<div class="col mb-4 portfolio-item landscape">
+					<a href="{% static 'images/portfolio-large-2.jpg' %}" class="image-link"
+					   title="Sample Caption goes here for Portfolio Item 23.">
+						<img src="{% static 'images/portfolio-thumb-1.jpg' %}" class="img-fluid" alt="portfolio">
+					</a>
+				</div>
+			</div>
+			
+
+		</div>
+	</section>
+
+	<section id="services" class="scrollspy-section padding-large">
+		<div class="container">
+			<div class="row">
+				<div class="section-header col-12">
+					
+					<h2 class="section-title" style="color:rgb(0, 221, 255); text-align: center;">Services</h2>
+				</div>
+			</div>
+	
+			<div class="row">
+				<div class="col-md-4">
+					<div class="services-item text-left">
+						<span class="number">01</span><br><br>
+						<h3 style="color: aqua;">Connect to Engineers</h3>
+						<p>The process of establishing communication and collaboration with a qualified engineer to oversee, design, assess, or provide technical guidance on construction projects. This connection ensures that engineering principles, safety regulations, and project specifications are properly applied throughout the construction process.</p>
+					</div>
+				</div>
+	
+				<div class="col-md-4">
+					<div class="services-item text-left">
+						<span class="number">02</span><br><br>
+						<h3 style="color: aqua;">View 2D Plan</h3>
+						<p>A 2D plan view is a flat, top-down representation of a structure or space in two dimensions, typically used in architectural, engineering, and construction drawings. It provides a bird’s-eye view of the layout, showing walls, doors, windows, furniture, and other structural elements with dimensions and annotations.</p>
+					</div>
+				</div>
+	
+				<div class="col-md-4">
+					<div class="services-item text-left">
+						<span class="number">03</span><br><br>
+						<h3 style="color: aqua;">Generate 3D Plan</h3>
+						<p>The process of creating a three-dimensional digital model of a space or structure based on architectural or engineering designs. This 3D representation provides depth, perspective, and realistic visualization of the project, allowing for better understanding and analysis compared to traditional 2D drawings.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<section id="subscribe" class="scrollspy-section padding-small">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<figure class="subscribe-image">
+						<img src="{% static 'images/subscribe-image.png' %}" alt="subscribe">
+					</figure>
+				</div>
+				<div class="col-md-6">
+					<div class="subscribe-content">
+						<h2 class="section-title" style="color: red;">subscribe us</h2>
+
+						<p>Join our newsletter to stay updated with super discounts and amazing offers. 300+ have
+							already subscribed us.</p>
+						<form id="form">
+							<input type="text" name="email" placeholder="enter your email address">
+							<button class="btn btn-accent btn-rounded btn-full btn-xlarge">Subscribe</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="latest-blog" class="scrollspy-section bg-grey padding-large" style="background-color: black;">
+
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="section-header">
+						<h2 class="section-title" style="color: aqua;">Latest Blog</h2>
+					</div>
+				</div>
+			</div>
+	
+			<div class="row">
+				<div class="col-md-12">
+					<div class="post-grid">
+						<div class="row">
+							<div class="col-md-4">
+								<article class="post-item">
+									<figure>
+										<a href="#" class="image-hvr-effect">
+											<img src="{% static 'images/postimg1.jpg' %}" alt="post" class="post-image">
+										</a>
+									</figure>
+									<div class="post-content">
+										<h3 style="color: aqua;">Connect to Engineers</h3>
+										<p>Connecting with a skilled engineer ensures safety, proper engineering, and project success by bridging the gap between users and engineers to create seamless, innovative, and user-centric solutions.</p>
+									</div>
+								</article>
+							</div>
+	
+							<div class="col-md-4">
+								<article class="post-item">
+									<figure>
+										<a href="#" class="image-hvr-effect">
+											<img src="{% static 'images/postimg2.jpg' %}" alt="post" class="post-image">
+										</a>
+									</figure>
+									<div class="post-content">
+										<h3 style="color: aqua;">Plot Selling and Buying</h3>
+										<p>Plot selling is the process of marketing and selling land to buyers, investors, or developers. It is a key part of real estate, where landowners sell residential, commercial, or industrial plots for construction or investment.</p>
+									</div>
+								</article>
+							</div>
+	
+							<div class="col-md-4">
+								<article class="post-item">
+									<figure>
+										<a href="#" class="image-hvr-effect">
+											<img src="{% static 'images/postimg3.jpg' %}" alt="post" class="post-image">
+										</a>
+									</figure>
+									<div class="post-content">
+										<h3 style="color: aqua;">AI-Powered 2D to 3D Plan Conversion</h3>
+										<p> Automatically transform flat 2D architectural drawings into detailed 3D models. AI enhances the conversion process by automating design interpretation, reducing human effort, and improving accuracy.</p>
+									</div>
+								</article>
+							</div>
+	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	</div>
+	</div>
+	</section>
+
+	<section id="contact" class="scrollspy-section bg-gradient padding-large" 
+    style="background: url('static/images/arj.jpg') no-repeat center center/cover; 
+    padding-top: 80px; padding-bottom: 80px; display: flex; justify-content: center;">
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- Form Section Centered -->
+            <div class="col-md-8">
+                <div class="left-content text-center">
+                    <div class="section-header">
+                        <h2 class="section-title light" 
+                            style="color: #ffffff; font-size: 36px; font-weight: bold; margin-bottom: 20px;">
+                            Contact Us
+                        </h2>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <form id="form-contact" class="form-light mx-auto" action="contact.php" 
+                        style="background-color: rgba(100, 100, 100, 0.5); padding: 40px; border-radius: 15px; 
+                         box-shadow: 0 0 30px skyblue; max-width: 600px; text-align: left;">
+                        
+                        <div class="form-group">
+                            <input type="text" name="name" class="form-control" placeholder="Your Full Name*" required 
+                                style="width: 100%; border-radius: 25px; border: 2px solid #249fa1; padding: 12px; 
+                                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s;">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" placeholder="Your Email Address*" required 
+                                style="width: 100%; border-radius: 25px; border: 2px solid #249fa1; padding: 12px; 
+                                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s;">
+                        </div>
+
+                        <div class="form-group">
+                            <textarea name="message" class="form-control" placeholder="Your Message" required 
+                                style="width: 100%; border-radius: 25px; border: 2px solid #249fa1; padding: 12px; 
+                                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s; min-height: 120px;"></textarea>
+                        </div>
+
+                        {% comment %} <div class="form-group text-left">
+                            <label for="agree" class="agree-checkbox">
+                                <input id="agree" name="agree" type="checkbox" required> 
+                                <span>I agree to the <a href="#" class="privacy-link" style="color: #249fa1;">privacy policy</a></span>
+                            </label>
+                        </div> {% endcomment %}
+
+                        <button class="btn btn-accent btn-lg btn-block" onmouseover="this.style.backgroundColor='rgb(8, 67, 68)'"  onmouseout="this.style.backgroundColor= '#249fa1'"
+                            style="background-color: #249fa1; color: white; border-radius: 30px; padding: 15px 30px; 
+                            font-size: 18px; transition: background-color 0.3s, transform 0.2s; width: 100%;">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+	
+	
+	<!-- CSS Enhancements for Hover Effects & Transitions -->
+	<style>
+		.iconbox:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+		}
+		
+		/* Form Input Focus Effects */
+		.form-control:focus {
+			border-color: #feb47b;
+			box-shadow: 0 0 5px rgba(255, 126, 95, 0.5);
+		}
+	
+		/* Button Hover Effects */
+		.btn-accent:hover {
+			background-color: #ff7e5f;
+		}
+	</style>
+	
+
+	
+
+	<footer id="footer">
+		<div class="container">
+			<div class="row">
+
+				<div class="col-md-3">
+
+					<div class="footer-menu menu-item-01">
+						<img src="{% static 'images/log.jpg' %}" alt="logo" class="footer-logo">
+						<p>AI Smart Construction refers to the integration of artificial intelligence (AI) technologies into the construction industry to enhance efficiency, safety, cost-effectiveness, and decision-making.</p>
+						<div class="social-links">
+							<ul>
+								<li>
+									<a href="#"><i class="icon icon-facebook"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="icon icon-twitter"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="icon icon-youtube-play"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="icon icon-behance-square"></i></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="col-md-2">
+
+					<div class="footer-menu menu-item-02">
+						<h5 style="color: aqua;">quick links</h5>
+						<ul class="menu-list">
+							<li class="menu-item">
+								<a href="#">home</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">about us </a>
+							</li>
+							<li class="menu-item">
+								<a href="#">services</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">portfolios</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">blogs</a>
+							</li>
+							<li class="menu-item">
+								<a href="#"style="color: aqua;">contact us</a>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+
+				<div class="col-md-4">
+
+					<div class="footer-menu menu-item-03">
+						<h5 style="color: aqua;"f>contact info</h5>
+						<ul class="menu-list">
+							<li class="menu-item">
+								<i class="icon icon-location"></i>Pattom thanupillai Road
+							</li>
+							
+							<li class="menu-item">
+								<i class="icon icon-phone"></i>+63 667 341 3463
+							</li>
+							<li class="menu-item">
+								<i class="icon icon-envelope-o"></i><a href="#" class="mail-id">smartconstruction@gmail.com</a>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+
+				<div class="col-md-3">
+
+					<div class="footer-menu menu-item-04">
+						<h5 style="color: aqua;">gallery</h5>
+						<div class="gallery">
+							<a href="/static/images/spacejoy.jpg" data-lightbox-gallery="gallery1"
+								title="Calm Before The Storm (One Shoe Photography Ltd.)" class="image-link"><img
+									src="/static/images/spacejoy.jpg" alt="house" class="gallery-image"></a>
+							<a href="/static/images/interior.jpg" data-lightbox-gallery="gallery1"
+								title="Grasmere Lake (Phil 'the link' Whittaker (gizto29))" class="image-link"><img
+									src="/static/images/postimg5.jpg" alt="house" class="gallery-image"></a>
+							<a href="/static/images/interior.jpg" data-lightbox-gallery="gallery1"
+								title="Grasmere Lake (Phil 'the link' Whittaker (gizto29))" class="image-link"><img
+									src="/static/images/postimg4.jpg" alt="house" class="gallery-image"></a>
+							<a href="/static/images/interior.jpg" data-lightbox-gallery="gallery1"
+								title="Grasmere Lake (Phil 'the link' Whittaker (gizto29))" class="image-link"><img
+									src="/static/images/postimg1.jpg" alt="house" class="gallery-image"></a>
+							<a href="/static/images/interior.jpg" data-lightbox-gallery="gallery1"
+								title="Grasmere Lake (Phil 'the link' Whittaker (gizto29))" class="image-link"><img
+									src="/static/images/postimg2.jpg" alt="house" class="gallery-image"></a>
+							<a href="/static/images/interior.jpg" data-lightbox-gallery="gallery1"
+								title="Grasmere Lake (Phil 'the link' Whittaker (gizto29))" class="image-link"><img
+									src="/static/images/postimg3.jpg" alt="house" class="gallery-image"></a>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</footer>
+
+	<div id="footer-bottom">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="copyright">
+						<p>© 2025 Estate Connect. All rights reserved.</p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="copyright text-right">
+						<p>WebSite By <a href="https://www.google.com/"
+								target="_blank">Estate Connect</a>  </p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="{% static 'js/jquery-1.11.0.min.js' %}"></script>
+	<script src="{% static 'js/ui-easing.js' %}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+		crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+	<script src="{% static 'js/plugins.js' %}"></script>
+	<script src="{% static 'js/script.js' %}"></script>
+
 </body>
+
 </html>

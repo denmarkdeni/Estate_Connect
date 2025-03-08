@@ -1,28 +1,225 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
-    <link rel="stylesheet" href="/static/css/form.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Dancing+Script&display=swap" rel="stylesheet">
+    <style>
+        /* Body style */
+        body {
+            font-family: inherit; /* Clean, modern sans-serif font for the body */
+            margin: 0;
+            padding: 0;
+            background: url('{% static "images/aju.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #0a0101;
+            overflow: hidden;
+        }
+
+        /* Centering the login container with transparency */
+        .login-container {
+            background: rgba(255, 255, 255, 0.3); /* Fully transparent background */
+            color: #fff;
+            border-radius: 15px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: none; /* Removed shadow */
+            text-align: center;
+            backdrop-filter: none; /* Removed blur effect */
+            font-family: inherit;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 3rem; /* Large size */
+            font-weight: 600; /* Semi-bold for the heading */
+            color: #180707;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-family: 'Dancing Script', cursive; /* Playful handwritten font for the heading */
+            text-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        /* Icon style for input fields */
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #333;
+            font-size: 16px;
+        }
+
+        input,select{
+            width: 100%;
+            padding: 10px 12px 10px 35px;
+            margin: 8px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.8); /* Slight transparency for input fields */
+            color: #333;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #00aaff;
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #00aaff;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background-color: #0077cc;
+            transform: scale(1.05);
+        }
+
+        .forgot-password {
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            text-decoration: none;
+            color: #000;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color:rgb(10, 54, 51);
+            text-decoration: underline;
+        }
+
+        /* Construction message */
+        .construction-message {
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .construction-message span {
+            color: #FFD93D;
+            font-size: 18px;
+        }
+
+        /* Additional styles for responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .login-container {
+                padding: 30px;
+                max-width: 90%;
+            }
+        }
+        .error-message p{
+            color: #721c24;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <h2>Register</h2>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    <form method="POST" class = "input-group">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="Username" required><br>
-        <input type="text" name="fullname" placeholder="Full Name" required><br>
-        <input type="email" name="email" placeholder="Email" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <select name="UserRole">
-            <option value="dealer">Dealer</option>
-            <option value="customer" selected>Customer</option>
-            <option value="engineer">Engineer</option>
-        </select><br>
-        <button type="submit" class="btn">Register</button>
-    </form>
-    <a href="/login">Login</a>
+
+    <div class="login-container">
+        <h2 style="font-family: inherit;">Register</h2>
+        {% if messages %}
+          <div class="error-message">
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <!-- Username -->
+            <div class="form-group">
+                <input type="text" name="username" id="username" placeholder="Username" required>
+            </div>
+
+            <!-- Fullname -->
+            <div class="form-group">
+                <input type="text" name="fullname" id="fullname" placeholder="Fullname" required>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <input type="email" name="email" id="email" placeholder="Email" required>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <input type="password" name="password" id="password" placeholder="Password" required>
+            </div>
+
+            <!-- UserRole -->
+            <div class="form-group">
+                <select name="UserRole">
+                    <option value="dealer">Dealer</option>
+                    <option value="customer" selected>Customer</option>
+                    <option value="engineer">Engineer</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit">Register</button>
+
+            <!-- Forgot Password Link -->
+            <div class="forgot-password">
+                <a href="#">Forgot Password? </a>
+                <a href="/login">Already Registered</a>
+            </div>
+        </form>
+
+        <!-- Construction Message -->
+        <!-- <div class="construction-message">
+            <span>Under Construction</span>
+        </div> -->
+    </div>
+
+    <!-- Include Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </body>
 </html>
