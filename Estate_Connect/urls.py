@@ -52,6 +52,7 @@ urlpatterns = [
     path('generate-blueprint/', generate_blueprint, name='generate_blueprint'),
     path('blueprint/', views.blueprint, name='blueprint'),
     path("generate-3d/", generate_3d, name="generate_3d"),
+    path("print_2d/", views.print_2d, name="print_2d"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

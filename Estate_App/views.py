@@ -101,6 +101,7 @@ def change_role(request, user_id, role):
 # 🔒 Logout Function
 def logout_view(request):
     logout(request)
+    messages.success(request, 'Logged out successfully!')
     return redirect('login')
 
 @login_required
@@ -321,3 +322,6 @@ def api_floorplan(request, plan_id):
         return JsonResponse({"svg": floor_plan.svg_data})
     except FloorPlan.DoesNotExist:
         return JsonResponse({"error": "Plan not found"}, status=404)
+    
+def print_2d(request):
+    return render(request, '2d_print.html')

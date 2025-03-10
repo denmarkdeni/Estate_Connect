@@ -218,7 +218,7 @@ def generate_3d(request):
 
     rooms = []
     for i in range(num_rooms):
-        try:
+        try: 
             rooms.append({
                 "name": room_names[i],
                 "width": int(widths[i]),
@@ -228,5 +228,5 @@ def generate_3d(request):
             })
         except Exception as e:
             print(f"Error processing room {i}: {e}")
-
+    print("Generated Blueprint Data:", rooms)
     return JsonResponse({"rooms": rooms})

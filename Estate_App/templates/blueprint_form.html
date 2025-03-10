@@ -73,13 +73,25 @@
     }
 
     function view3D() {
-        fetch("{% url 'generate_3d' %}?" + new URLSearchParams(new FormData(document.querySelector('form'))))
+        let form = document.querySelector("form");
+        let formData = new FormData(form);
+        console.log("📝 Form Data:", formData); // Debugging
+        let params = new URLSearchParams();
+    
+        formData.forEach((value, key) => {
+            params.append(key, value); // Append all values correctly
+        });
+        console.log("🔍 Params:", params.toString());
+        fetch("{% url 'generate_3d' %}?" + params.toString())
         .then(response => response.json())
         .then(data => {
+            console.log("✅ 3D Data Received:", data); // Debugging
             document.getElementById("threeDContainer").style.display = "block";
             render3D(data.rooms);
-        });
-    }
+        })
+        .catch(error => console.error("❌ Error:", error));
+    }    
+    
 
     function render3D(rooms) {
         const container = document.getElementById("threeDContainer");
@@ -92,12 +104,22 @@
         container.appendChild(renderer.domElement);
 
         const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+        const material = new THREE.MeshBasicMaterial({ color: 0xaaaaaa });
 
         rooms.forEach(room => {
             const cube = new THREE.Mesh(new THREE.BoxGeometry(room.width / 10, 50, room.height / 10), material);
             cube.position.set(room.x / 10, 25, room.y / 10);
             scene.add(cube);
+
+            const light = new THREE.AmbientLight(0xffffff, 1);
+            scene.add(light);
+
+            renderer.shadowMap.enabled = true;
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+            dirLight.position.set(10, 50, 10);
+            dirLight.castShadow = true;
+            scene.add(dirLight);
         });
 
         camera.position.set(0, 100, 200);
