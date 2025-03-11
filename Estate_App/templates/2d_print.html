@@ -22,7 +22,8 @@
         {
             "imports": {
                 "three": "/static/js/three.module.min.js",
-                "three/examples/jsm/controls/DragControls": "/static/js/DragControls.js"
+                "three/examples/jsm/controls/DragControls": "/static/js/DragControls.js",
+                "three/examples/jsm/renderers/CSS2DRenderer": "/static/js/CSS2DRenderer.js"
             }
         }
     </script> 
@@ -30,10 +31,11 @@
     <script type="module">
         import * as THREE from "three";  
         import { DragControls } from "three/examples/jsm/controls/DragControls";
+        import { CSS2DRenderer, CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
     
         console.log("Three.js and DragControls loaded successfully!", THREE);
     
-        let scene, camera, renderer, raycaster, mouse;
+        let scene, camera, renderer, raycaster, mouse, labelRenderer;
         let rooms = [];
         let selectedRoom = null, offset = new THREE.Vector3();
 
@@ -59,6 +61,13 @@
             renderer.domElement.addEventListener("mousedown", onMouseDown);
             renderer.domElement.addEventListener("mousemove", onMouseMove);
             renderer.domElement.addEventListener("mouseup", onMouseUp);
+
+            labelRenderer = new CSS2DRenderer();
+            labelRenderer.domElement.style.pointerEvents = "none";
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.domElement.style.position = "absolute";
+            labelRenderer.domElement.style.top = "0px";
+            document.body.appendChild(labelRenderer.domElement);
 
             animate();
         }
@@ -153,35 +162,109 @@
         function animate() {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
+            labelRenderer.render(scene, camera);
         }
-
-        init();
 
         // Wall & Door Placement Feature for Interactive 2D Blueprint
 
         let walls = [], doors = [];
 
         window.addWall = function (x1 = -50, y1 = 0, x2 = 50, y2 = 0) {
-            const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-            
-            // Calculate wall length & angle
-            const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-            const angle = Math.atan2(y2 - y1, x2 - x1);
+            const material = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 5 });
+            const geometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(x1, y1, 0),
+                new THREE.Vector3(x2, y2, 0)
+            ]);
+            const wall = new THREE.Line(geometry, material);
         
-            // Create a thin rectangle for the wall
-            const wallGeometry = new THREE.PlaneGeometry(length, 10);
-            const wallMesh = new THREE.Mesh(wallGeometry, wallMaterial);
+            // **Ensure userData is set correctly**
+            wall.userData = { start: { x: x1, y: y1 }, end: { x: x2, y: y2 } };
         
-            // Set position & rotation
-            wallMesh.position.set((x1 + x2) / 2, (y1 + y2) / 2, 0);
-            wallMesh.rotation.z = angle;
+            // **Create Resize Handles**
+            const handleGeometry = new THREE.CircleGeometry(5, 32);
+            const handleMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const startHandle = new THREE.Mesh(handleGeometry, handleMaterial);
+            const endHandle = new THREE.Mesh(handleGeometry, handleMaterial);
         
-            scene.add(wallMesh);
-            walls.push({ mesh: wallMesh, start: { x: x1, y: y1 }, end: { x: x2, y2: y2 } });
+            startHandle.position.set(x1, y1, 0);
+            endHandle.position.set(x2, y2, 0);
         
-            console.log("Wall added:", wallMesh);
-        };
+            // **Add Wall Length Label**
+            const labelDiv = document.createElement("div");
+            labelDiv.className = "wall-label";
+            labelDiv.textContent = "0.0m";  // Default text
+            document.body.appendChild(labelDiv);
         
+            const labelObject = new CSS2DObject(labelDiv);
+            scene.add(labelObject);
+        
+            function updateWallLabel() {
+                const midX = (wall.userData.start.x + wall.userData.end.x) / 2;
+                const midY = (wall.userData.start.y + wall.userData.end.y) / 2;
+        
+                labelObject.position.set(midX, midY, 0);
+        
+                // **Calculate Wall Length**
+                const length = Math.sqrt(
+                    Math.pow(wall.userData.end.x - wall.userData.start.x, 2) +
+                    Math.pow(wall.userData.end.y - wall.userData.start.y, 2)
+                );
+                labelDiv.textContent = (length / 100).toFixed(2) + "m";  // Convert to meters
+            }
+        
+            // **Store in Walls Array**
+            const wallObj = { wall, startHandle, endHandle, labelObject, updateWallLabel };
+            walls.push(wallObj);
+        
+            // **Add to Scene**
+            scene.add(wall, startHandle, endHandle);
+        
+            // **Enable Drag Controls for Resizing**
+            const resizeControls = new DragControls([startHandle, endHandle], camera, renderer.domElement);
+            resizeControls.addEventListener("drag", function (event) {
+
+                // **Ignore drag events for non-wall handles**
+                if (!walls.some(w => w.startHandle === event.object || w.endHandle === event.object)) {
+                    return;  // **Exit if it's not a wall handle**
+                }
+                const wallObj = walls.find(w => w.startHandle === event.object || w.endHandle === event.object);
+        
+                if (!wallObj || !wallObj.wall) {
+                    console.error("Wall object is missing!", wallObj);
+                    return;
+                }
+        
+                if (!wallObj.wall.userData) {
+                    console.warn("Wall userData is undefined!", wallObj);
+                    wallObj.wall.userData = { start: {}, end: {} };
+                }
+        
+                if (event.object === wallObj.startHandle) {
+                    wallObj.wall.userData.start.x = event.object.position.x;
+                    wallObj.wall.userData.start.y = event.object.position.y;
+                } else {
+                    wallObj.wall.userData.end.x = event.object.position.x;
+                    wallObj.wall.userData.end.y = event.object.position.y;
+                }
+        
+                // **Update Wall Geometry**
+                const points = [
+                    new THREE.Vector3(wallObj.wall.userData.start.x, wallObj.wall.userData.start.y, 0),
+                    new THREE.Vector3(wallObj.wall.userData.end.x, wallObj.wall.userData.end.y, 0)
+                ];
+                wallObj.wall.geometry.setFromPoints(points);
+        
+                // **Update Wall Label**
+                wallObj.updateWallLabel();
+            });
+        
+            // **Initialize Label Position**
+            updateWallLabel();
+        };            
+        
+        function snapToGrid(value, gridSize = 10) {
+            return Math.round(value / gridSize) * gridSize;
+        }
 
         function addDoor(wall) {
             const doorWidth = 50;
@@ -201,15 +284,17 @@
                 -(event.clientY / window.innerHeight) * 2 + 1
             );
             raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(walls.map(w => w.mesh));
+            const wallMeshes = walls.map(w => w.mesh).filter(mesh => mesh !== undefined);
+            const intersects = raycaster.intersectObjects(wallMeshes);
             if (intersects.length > 0) {
                 addDoor(walls.find(w => w.mesh === intersects[0].object));
             }
         }
 
+        init();
         renderer.domElement.addEventListener("click", onWallClick);
         addWall(-200, 0, 200, 0);
-
+        
     </script>
 
 </body>

@@ -325,3 +325,6 @@ def api_floorplan(request, plan_id):
     
 def print_2d(request):
     return render(request, '2d_print.html')
+    
+def fabric_2d(request):
+    return render(request, 'fabric_2d.html')

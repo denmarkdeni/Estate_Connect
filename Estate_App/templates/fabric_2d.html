@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric.js 2D Blueprint</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        canvas { border: 1px solid black; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Blueprint Generator</h2>
+    <label>BHK Type:</label>
+    <input type="number" id="bhk" value="2" min="1">
+    <label>Area Size (sq ft):</label>
+    <input type="number" id="areaSize" value="1000" min="100">
+    <label>Room Count:</label>
+    <input type="number" id="roomCount" value="4" min="1">
+    <button onclick="generateBlueprint()">Generate Blueprint</button>
+    <canvas id="blueprintCanvas" width="800" height="600"></canvas>
+    
+    <script>
+        const canvas = new fabric.Canvas('blueprintCanvas');
+
+        function generateBlueprint() {
+            const bhk = document.getElementById('bhk').value;
+            const areaSize = document.getElementById('areaSize').value;
+            const roomCount = document.getElementById('roomCount').value;
+            
+            canvas.clear();
+            const gridSize = Math.sqrt(areaSize);
+            let x = 50, y = 50;
+            const roomWidth = gridSize / Math.sqrt(roomCount) * 5;
+            const roomHeight = roomWidth;
+
+            for (let i = 0; i < roomCount; i++) {
+                let room = new fabric.Rect({
+                    left: x,
+                    top: y,
+                    fill: 'rgba(173, 216, 230, 0.5)',
+                    width: roomWidth,
+                    height: roomHeight,
+                    stroke: 'black',
+                    strokeWidth: 2,
+                    selectable: true
+                });
+                
+                let label = new fabric.Text(`Room ${i+1}`, {
+                    left: x + 10,
+                    top: y + 10,
+                    fontSize: 16,
+                    fill: 'black'
+                });
+
+                canvas.add(room);
+                canvas.add(label);
+
+                x += roomWidth + 20;
+                if (x > 600) { 
+                    x = 50;
+                    y += roomHeight + 20;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
