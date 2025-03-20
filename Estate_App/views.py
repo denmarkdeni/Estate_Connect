@@ -11,8 +11,10 @@ from rest_framework import status
 from .serializers import PropertySerializer
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from .floor_plan import generate_floor_plan ,generate_dynamic_floor_plan,generate_realistic_floor_plan
+from .floor_plan import generate_dynamic_floor_plan,generate_realistic_floor_plan
+from .plot_plan import generate_floor_plan, plot_floor_plan
 from django.http import JsonResponse
+import plotly.graph_objects as go
 
 def index(request):
     return render(request,'index.html')
@@ -328,3 +330,34 @@ def print_2d(request):
     
 def fabric_2d(request):
     return render(request, 'fabric_2d.html')
+
+def plot_2d(request):
+    if request.method == "POST":
+        room_counts = {
+            "Entry": 1,
+            "Living Room": int(request.POST.get("living_room", 0)),
+            "Dining Room": int(request.POST.get("dining_room", 0)),
+            "Kitchen": int(request.POST.get("kitchen", 0)),
+            "Bedroom": int(request.POST.get("bedroom", 0)),
+            "Bathroom": int(request.POST.get("bathroom", 0)),
+        }
+
+        floor_plan, max_x, max_y = generate_floor_plan(room_counts)
+        plot_floor_plan(floor_plan, max_x, max_y)
+
+        return HttpResponse("Floor Plan Generated Successfully!")
+    
+    return render(request, "plot_2d.html")
+
+def plot_3d(request):
+    floor_plan = [
+        [0, 1, 1, 0],  
+        [1, 2, 2, 1],  
+        [1, 2, 2, 1],  
+        [0, 1, 1, 0]
+    ]
+    
+    fig = go.Figure(data=[go.Surface(z=floor_plan)])
+    plot_div = fig.to_html(full_html=False)
+    
+    return render(request, "plot_3d.html", {"plot_div": plot_div})

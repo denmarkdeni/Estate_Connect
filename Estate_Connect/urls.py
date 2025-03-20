@@ -54,6 +54,9 @@ urlpatterns = [
     path("generate-3d/", generate_3d, name="generate_3d"),
     path("print_2d/", views.print_2d, name="print_2d"),
     path("fabric_2d/", views.fabric_2d, name="fabric_2d"),
+    path("plot_2d/", views.plot_2d, name="plot_2d"),
+    path("plot_3d/", views.plot_3d, name="plot_3d"),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
