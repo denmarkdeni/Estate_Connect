@@ -1,30 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engineer Dashboard</title>
-    <link rel="stylesheet" href="/static/css/dashboard.css">
-</head>
-<body>
-    <h2>Engineer Dashboard</h2>
-    <ul>
-        {% for request in requests %}
-            <li>
-                <strong>{{ request.property.title }}</strong> - Modification requested by {{ request.customer.username }}<br>
-                Status: {{ request.status }}
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="request_id" value="{{ request.id }}">
-                    <label>Update Status:</label>
-                    <select name="status">
-                        <option value="in_progress">In Progress</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                    <button type="submit">Update</button>
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "user_base.html" %} 
+
+{% block content %}
+
+    <section class="cards">
+        <div class="card">
+            <h3>Total Orders</h3>
+            <p>15</p>
+        </div>
+        <div class="card">
+            <h3>Pending Orders</h3>
+            <p>3</p>
+        </div>
+        <div class="card">
+            <h3>Completed Orders</h3>
+            <p>12</p>
+        </div>
+    </section>
+    <section class="table-section">
+        <h2>Recent Orders</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Product</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#1001</td>
+                    <td>Smartphone</td>
+                    <td>Shipped</td>
+                    <td>March 10, 2025</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+{% endblock %}

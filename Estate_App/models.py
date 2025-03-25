@@ -49,7 +49,7 @@ class Property(models.Model):
         ('sold', 'Sold'),
         ('pending', 'Pending'),
     ]
-    dealer = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to dealer
+    dealer = models.ForeignKey(User, on_delete=models.CASCADE) 
     title = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)

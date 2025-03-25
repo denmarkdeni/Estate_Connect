@@ -1,0 +1,99 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+    <div class="container">
+
+        <div class="row ">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Dealers List</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Dealer Name</th>
+                                        <th>Username</th>
+                                        <th>Company Name</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for dealer in approved_dealers %}
+                                    <tr>
+                                        <td>{{ dealer.user.userinfo.fullname }}</td>
+                                        <td> {{ dealer.user.username }} </td>
+                                        <td>{{ dealer.user.dealer.company_name }}</td>
+                                        <td> {{ dealer.user.dealer.phone }} </td>
+                                        <td> {{ dealer.user.email }} </td>
+                                        <td>
+                                            <div class="badge badge-outline-success">Approved</div>
+                                        </td>
+                                    </tr>     
+                                    {% endfor %}                     
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Pending List</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Dealer Name</th>
+                                        <th>Username</th>
+                                        <th>Company Name</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% if pending_dealers %}
+                                    {% for dealer in pending_dealers %}      
+                                    <tr>                           
+                                        <td>{{ dealer.user.userinfo.fullname }}</td>
+                                        <td> {{ dealer.user.username }} </td>
+                                        <td>{{ dealer.user.dealer.company_name }}</td>
+                                        <td> {{ dealer.user.dealer.phone }} </td>
+                                        <td> {{ dealer.user.email }} </td>
+                                        <td>
+                                            {% if not engineer.is_approved %}
+                                            <form method="POST" action="{% url 'approve_dealer' dealer.user.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-success btn-sm">Approve</button> 
+                                            </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>     
+                                    {% endfor %}   
+                                {% else %}       
+                                    <tr>
+                                        <td colspan = '6' > No pending engineers</td>
+                                    </tr>
+                                {% endif %}           
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+    

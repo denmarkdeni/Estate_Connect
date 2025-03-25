@@ -1,0 +1,17 @@
+{% extends 'user_base.html' %}  
+{% block content %}
+
+<div class="property-container">
+    {% for property in properties %}
+        <div class="property-card">
+            <img src="{{ property.image.url }}" alt="Property Image" style="width: 100%; border-radius: 8px;">
+            <h3>{{ property.title }}</h3>
+            <p>{{ property.description }}</p>
+            <p><strong>Price:</strong> ₹ {{ property.price }}</p>
+            <a href="{% url 'property_details' property.id %}"><button class="detail-btn">View Details</button></a>
+        </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

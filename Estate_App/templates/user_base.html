@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEALER Dashboard</title>
+    <link rel="stylesheet" href="/static/css/user.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/static/images/logo_estate_connect.jpeg" alt="Estate Connect Logo">
+            </div>
+            
+            <ul>
+                {% if request.user.userinfo.UserRole == 'customer' %}
+                <a href="/dealer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
+                <a href="/properties"><li><i class="fas fa-check"></i> Property List</li></a>
+                {% endif %}
+                
+                {% if request.user.userinfo.UserRole == 'engineer' %}
+                <a href="/dealer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
+                <a href="/properties"><li><i class="fas fa-check"></i> Property List</li></a>
+                {% endif %}
+
+                {% if request.user.userinfo.UserRole == 'dealer' %}
+                <a href="/dealer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
+                <a href="/dealer_upload_property"><li><i class="fas fa-shopping-cart"></i> Upload Property</li></a>
+                {% endif %}
+                
+                <a href="/user-profile"><li><i class="fas fa-user"></i> Profile</li></a>
+                <a href="/#"><li><i class="fas fa-cog"></i> Settings</li></a>
+                <a href="/logout"><li><i class="fas fa-cog"></i> Logout</li></a>
+            </ul>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <div class="user-info">
+                    <span class="username">Welcome, {{ request.user.username }}</span>
+                    <a href="/logout" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </header>
+            
+            {% block content %}
+
+            {% endblock %}
+
+        </main>
+    </div>
+</body>
+</html>

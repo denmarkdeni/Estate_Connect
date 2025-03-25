@@ -1,0 +1,249 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Body Styling */
+body {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100%;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul a {
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar ul li:hover {
+    background-color: #34495e;
+}
+
+.sidebar ul li i {
+    margin-right: 10px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 250px;
+}
+
+/* Header */
+header {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 24px;
+}
+
+/* Cards Section */
+.cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+    color: #3498db;
+}
+
+/* Table Section */
+.table-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-section h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table thead {
+    background: #2980b9;
+    color: white;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+}
+
+table tbody tr:nth-child(even) {
+    background: #f2f2f2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        text-align: center;
+    }
+
+    .sidebar ul li {
+        justify-content: center;
+    }
+
+    .cards {
+        flex-direction: column;
+    }
+}
+.header{
+    display: flex;
+    justify-content: end;
+}
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 200px; 
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.logo h1 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* User Info */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.logout-btn {
+    background-color: #E74C3C; /* Red */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background-color: #C0392B;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .user-info {
+        margin-top: 10px;
+    }
+}
+.property-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.property-card {
+    width: calc(33.33% - 20px); /* 3 per row */
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.detail-btn{
+    background-color: #164c5c; 
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+.detail-btn:hover {
+    background-color: #0e2c36;
+}

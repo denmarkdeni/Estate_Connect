@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from .models import UserInfo, Property, PropertyModification, Dealer, Engineer,FloorPlan
+from .models import UserInfo, Property, PropertyModification, Dealer, Engineer, Customer, FloorPlan
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
@@ -65,41 +65,6 @@ def login_view(request):
 
     return render(request, 'login.html')
 
-@login_required
-def admin_dashboard(request):
-    person = User.objects.get(id=request.user.id)
-    users = UserInfo.objects.exclude(UserRole='admin')  
-    users_count = users.count()
-    return render(request, 'admin_dashboard.html', {'users': users,'users_count':users_count,'person':person})
-
-def manage_users(request):
-    users = UserInfo.objects.exclude(UserRole='admin') 
-    return render(request, 'manage_users.html', {'users': users})
-
-
-# ✅ Approve Users
-@login_required
-def approve_user(request, user_id):
-    user = get_object_or_404(UserInfo, id=user_id)
-    user.is_approved = True
-    user.save()
-    return redirect('manage_users')
-
-# ❌ Remove Users
-@login_required
-def remove_user(request, user_id):
-    user = get_object_or_404(UserInfo, id=user_id)
-    user.delete()
-    return redirect('manage_users')
-
-# 🔄 Change User Role
-@login_required
-def change_role(request, user_id, role):
-    user = get_object_or_404(UserInfo, id=user_id)
-    user.UserRole = role
-    user.save()
-    return redirect('manage_users')
-
 # 🔒 Logout Function
 def logout_view(request):
     logout(request)
@@ -107,12 +72,83 @@ def logout_view(request):
     return redirect('login')
 
 @login_required
-def dealer_dashboard(request):
-    properties = Property.objects.filter(dealer=request.user)
-    return render(request, 'dealer_dashboard.html', {'properties': properties})
+def admin_dashboard(request):
+    person = User.objects.get(id=request.user.id)
+    engineers_count = UserInfo.objects.filter(UserRole='engineer').count()
+    dealers_count = UserInfo.objects.filter(UserRole='dealer').count()
+    customers_count = UserInfo.objects.filter(UserRole='customer').count()
+    properties_count = Property.objects.all().count()
+    return render(request, 'admin_dashboard.html', {'engineers_count':engineers_count,'dealers_count':dealers_count,'customers_count':customers_count,'person':person,'properties_count':properties_count})
 
-@login_required
-def upload_property(request):
+def admin_engineers(request):
+    approved_engineers = Engineer.objects.filter(is_approved=True)
+    pending_engineers = Engineer.objects.filter(is_approved=False)
+    return render(request, 'admin_engineers.html', {'approved_engineers': approved_engineers, 'pending_engineers': pending_engineers})
+
+def admin_dealers(request):
+    approved_dealers = Dealer.objects.filter(is_approved=True)
+    pending_dealers = Dealer.objects.filter(is_approved=False)
+    return render(request, 'admin_dealers.html', {'approved_dealers': approved_dealers, 'pending_dealers': pending_dealers})
+
+def admin_customers(request):
+    customers = Customer.objects.all()
+    return render(request, 'admin_customers.html', {'customers': customers})
+
+def user_profile(request):
+    user = request.user  # Get logged-in user
+    
+    if user.userinfo.UserRole == "dealer":
+        dealer, created = Dealer.objects.get_or_create(user=user)
+        if request.method == "POST":
+            dealer.company_name = request.POST.get("company_name", dealer.company_name)
+            dealer.phone = request.POST.get("phone", dealer.phone)
+            dealer.address = request.POST.get("address", dealer.address)
+            dealer.save()
+            return redirect("user_profile") 
+
+    elif user.userinfo.UserRole == "customer":
+        customer, created = Customer.objects.get_or_create(user=user)
+        if request.method == "POST":
+            customer.phone = request.POST.get("phone", customer.phone)
+            customer.address = request.POST.get("address", customer.address)
+            customer.save()
+            return redirect("user_profile")
+
+    elif user.userinfo.UserRole == "engineer":
+        engineer, created = Engineer.objects.get_or_create(user=user)
+        if request.method == "POST":
+            engineer.expertise = request.POST.get("expertise", engineer.expertise)
+            engineer.phone = request.POST.get("phone", engineer.phone)
+            engineer.save()
+            return redirect("user_profile")
+        
+    return render(request, 'user_profile.html')
+
+def approve_engineer(request, user_id):
+    engineer = get_object_or_404(Engineer, user_id=user_id)
+    engineer.is_approved = True  
+    engineer.save()
+    messages.success(request, f"{engineer.user.userinfo.fullname} has been approved!")
+    return redirect("admin_engineers")
+
+def approve_dealer(request, user_id):
+    dealer = get_object_or_404(Dealer, user_id=user_id)
+    dealer.is_approved = True  
+    dealer.save()
+    messages.success(request, f"{dealer.user.userinfo.fullname} has been approved!")
+    return redirect("admin_dealers")
+
+def property_list(request):
+    properties = Property.objects.all()  
+    return render(request, "property_list.html", {"properties": properties})
+
+@login_required 
+def dealer_dashboard(request):
+    person = User.objects.get(id=request.user.id)
+    properties = Property.objects.filter(dealer=request.user)
+    return render(request, 'dealer_dashboard.html', {'person':person,'properties': properties})
+
+def dealer_upload_property(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         description = request.POST.get('description')
@@ -130,13 +166,13 @@ def upload_property(request):
         )
         property_obj.save()
         
-        return redirect('dealer_dashboard')  # Redirect to dashboard after upload
-
-    return render(request, 'upload_property.html')
+        return redirect('dealer_dashboard')
+    return render(request, 'dealer_upload_property.html')  
 
 def customer_dashboard(request):
     query = request.GET.get('q', '')  # Get search query from the request
-    properties = Property.objects.filter(status='available')  # Fetch only available properties
+    properties = Property.objects.filter(status='available')
+    person = User.objects.get(id=request.user.id)  
 
     if query:
         properties = properties.filter(
@@ -150,6 +186,7 @@ def customer_dashboard(request):
     context = {
         'properties': properties,
         'query': query,
+        'person': person
     }
     return render(request, 'customer_dashboard.html', context)
 
@@ -201,6 +238,7 @@ def dealer_manage_requests(request):
 @login_required
 def engineer_dashboard(request):
     requests = PropertyModification.objects.filter(engineer=request.user)
+    person = User.objects.get(id=request.user.id)
 
     if request.method == "POST":
         request_id = request.POST.get("request_id")
@@ -212,7 +250,7 @@ def engineer_dashboard(request):
         messages.success(request, "Status updated successfully.")
         return redirect("engineer_dashboard")
 
-    return render(request, "engineer_dashboard.html", {"requests": requests})
+    return render(request, "engineer_dashboard.html", {"requests": requests, "person": person})
 
 @login_required
 def update_profile(request):
@@ -278,12 +316,12 @@ def verify_users(request):
 
     return render(request, "verify_users.html", {"dealers": dealers, "engineers": engineers})
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def property_list(request):
-    properties = Property.objects.all()
-    serializer = PropertySerializer(properties, many=True)
-    return Response(serializer.data)
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def property_list(request):
+#     properties = Property.objects.all()
+#     serializer = PropertySerializer(properties, many=True)
+#     return Response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

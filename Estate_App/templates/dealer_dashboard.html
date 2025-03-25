@@ -1,88 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dealer Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            padding: 20px;
-        }
-        
-        h2 {
-            color: #333;
-        }
-        
-        h3 {
-            color: #555;
-            margin-top: 20px;
-        }
-        
-        a {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-            margin: 10px 0;
-            transition: background 0.3s;
-        }
-        
-        a:hover {
-            background-color: #0056b3;
-        }
-        
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 20px auto;
-            max-width: 600px;
-        }
-        
-        li {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
-        }
-        
-        strong {
-            font-size: 18px;
-            color: #333;
-        }
-        
-        img {
-            display: block;
-            margin-top: 10px;
-            border-radius: 5px;
-            max-width: 100%;
-            height: auto;
-        }
-        
-    </style>
-</head>
-<body>
-    <h2>Welcome, {{ user.username }}!</h2>
-    <a href="{% url 'upload_property' %}">Upload New Property</a>
-    <a href="{% url 'dealer_manage_requests' %}">Manage Requests</a>
-    
-    <h3>Your Properties:</h3>
-    <ul>
-        {% for property in properties %}
-            <li>
-                <strong>{{ property.title }}</strong> - ${{ property.price }} <br>
-                <img src="{{ property.image.url }}" alt="{{ property.title }}" width="150">
-            </li>
-        {% empty %}
-            <p>No properties uploaded yet.</p>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "user_base.html" %} 
+
+{% block content %}
+
+    <section class="cards">
+        <div class="card">
+            <h3>Total Orders</h3>
+            <p>15</p>
+        </div>
+        <div class="card">
+            <h3>Pending Orders</h3>
+            <p>3</p>
+        </div>
+        <div class="card">
+            <h3>Completed Orders</h3>
+            <p>12</p>
+        </div>
+    </section>
+    <section class="table-section">
+        <h2>Recent Orders</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Product</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#1001</td>
+                    <td>Smartphone</td>
+                    <td>Shipped</td>
+                    <td>March 10, 2025</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+{% endblock %}

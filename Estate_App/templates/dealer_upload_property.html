@@ -1,0 +1,79 @@
+{% extends "user_base.html" %} 
+
+{% block content %}
+
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    label {
+        font-weight: bold;
+        margin: 10px 0 5px;
+        color: #34495e;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    /* Textarea Styling */
+    textarea {
+        height: 100px;
+        resize: none;
+    }
+    
+    /* Button Styling */
+    button {
+        background: #3498db;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    
+    button:hover {
+        background: #2980b9;
+    }
+    
+</style>
+
+<section class="table-section">
+
+    <h2>Upload Property</h2>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Title:</label>
+        <input type="text" name="title" required><br>
+
+        <label>Description:</label>
+        <textarea name="description" required></textarea><br>
+
+        <label>Price:</label>
+        <input type="number" name="price" step="0.01" required><br>
+
+        <label>Location:</label>
+        <input type="text" name="location" required><br>
+
+        <label>Image:</label>
+        <input type="file" name="image"><br>
+
+        <button type="submit">Upload Property</button>
+    </form>
+
+</section>
+
+{% endblock %}
