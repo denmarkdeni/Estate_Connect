@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Property View</title>
+{% extends 'user_base.html' %}  
+{% block content %}
+
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
     <style>
         model-viewer {
             width: 100%;
@@ -12,16 +10,19 @@
             border: 3px solid #000;
         }
     </style>
-</head>
-<body>
-    <h2>Property 3D View</h2>
+
+    <div class="head-back">
+        <h2>Property 3D View</h2>
+        <button onclick="window.history.back()" class="logout-btn" style="background-color:blue;">Logout</button>
+    </div>
+
     <model-viewer 
-        src="/static/models/floor_plan_3d.glb" 
+        src="{{property.model_3d.url}}" 
         alt="3D Model of House" 
         auto-rotate 
         camera-controls 
         ar
         shadow-intensity="1">
     </model-viewer>
-</body>
-</html>
+
+{% endblock %}

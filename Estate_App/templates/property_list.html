@@ -1,12 +1,27 @@
 {% extends 'user_base.html' %}  
 {% block content %}
 
+<section class="Search-Bar">
+    <h2>Properties List</h2><br>
+    <form method="GET">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search properties...">
+        <button type="submit">Search</button>
+    </form>
+</section>
+
+{% if properties %}
+    <h3 style="text-align: center;">Available Properties: {{ properties|length }}</h3>
+{% else %}
+    <h3 style="text-align: center;">No properties found</h3>
+{% endif %}
+<br>
 <div class="property-container">
     {% for property in properties %}
         <div class="property-card">
             <img src="{{ property.image.url }}" alt="Property Image" style="width: 100%; border-radius: 8px;">
             <h3>{{ property.title }}</h3>
             <p>{{ property.description }}</p>
+            <p><strong>Location:</strong> {{ property.location }}</p>
             <p><strong>Price:</strong> ₹ {{ property.price }}</p>
             <a href="{% url 'property_details' property.id %}"><button class="detail-btn">View Details</button></a>
         </div>

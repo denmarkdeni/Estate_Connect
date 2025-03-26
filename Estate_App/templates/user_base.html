@@ -23,11 +23,14 @@
                 {% if request.user.userinfo.UserRole == 'engineer' %}
                 <a href="/dealer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
                 <a href="/properties"><li><i class="fas fa-check"></i> Property List</li></a>
+                <a href="/plot_2d"><li><i class="fas fa-shopping-cart"></i> 2D Design</li></a>
+                <a href="/upload_3d_model"><li><i class="fas fa-shopping-cart"></i> 3D Upload</li></a>
                 {% endif %}
 
                 {% if request.user.userinfo.UserRole == 'dealer' %}
                 <a href="/dealer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
                 <a href="/dealer_upload_property"><li><i class="fas fa-shopping-cart"></i> Upload Property</li></a>
+                <a href="/dealer/manage-requests"><li><i class="fas fa-shopping-cart"></i> Manage Requests</li></a>
                 {% endif %}
                 
                 <a href="/user-profile"><li><i class="fas fa-user"></i> Profile</li></a>
@@ -51,5 +54,27 @@
 
         </main>
     </div>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+
+        <script>
+            // Wait for the page to load
+            document.addEventListener("DOMContentLoaded", function () {
+                setTimeout(function () {
+                    let messages = document.querySelector(".messages");
+                    if (messages) {
+                        messages.style.transition = "opacity 0.5s ease";
+                        messages.style.opacity = "0";
+                        setTimeout(() => messages.remove(), 500); // Remove from DOM after fading out
+                    }
+                }, 2000); // 2 seconds delay before fade out
+            });
+        </script>
+    {% endif %}
+
 </body>
 </html>

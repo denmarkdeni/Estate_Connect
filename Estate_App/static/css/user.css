@@ -235,7 +235,7 @@ table tbody tr:nth-child(even) {
     text-align: center;
 }
 
-.detail-btn{
+.detail-btn , .Search-Bar form button{
     background-color: #164c5c; 
     color: white;
     padding: 8px 15px;
@@ -244,6 +244,100 @@ table tbody tr:nth-child(even) {
     transition: 0.3s;
     font-size: 14px;
 }
-.detail-btn:hover {
+.detail-btn:hover ,.Search-Bar form button:hover{
     background-color: #0e2c36;
+}
+
+.Search-Bar{
+    text-align: center;
+}
+
+.Search-Bar form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.Search-Bar form input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 200px;
+}
+.property-details{
+    display: flex;
+    margin-top: 20px;
+    flex-direction: column;
+    gap: 10px;
+}
+.property-actions{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.request-item {
+    list-style: none;
+    padding: 0;
+    max-width: 100%;
+    margin: auto;
+}
+
+/* Request Item */
+.request-item li {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Form Styling */
+.request-item form {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Select Dropdown */
+.request-item select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Assign Button */
+.request-item button {
+    background: #28a745;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.request-item button:hover {
+    background: #218838;
+}
+.messages {
+    position: fixed;
+    top: 20px;
+    right: 50%;
+    background: #2c3e50;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+.head-back{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }

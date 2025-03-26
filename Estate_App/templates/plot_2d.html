@@ -1,56 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Floor Plan</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #f4f4f4;
-            padding: 20px;
-        }
-        form {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            margin-top: 15px;
-            background: blue;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-        }
-        img {
-            margin-top: 20px;
-            border: 2px solid #333;
-            border-radius: 5px;
-            width: 80%;
-        }
-    </style>
-</head>
-<body>
+{% extends 'user_base.html' %}  
+{% block content %}
 
-    <h2>Enter Room Counts</h2>
+<style>
+    h2 {
+        text-align: center;
+    }
+    form {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+    }
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+    }
+    input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        margin-top: 15px;
+        background: blue;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+    #plotImage {
+        margin-top: 20px;
+        border: 2px solid #333;
+        border-radius: 5px;
+        width: 80%;
+    }
+    #downloadBtn {
+        display: block;
+        width: 80%;
+    }
+</style>
+
+
+    <h2>2D Design</h2>
     <form id="roomForm">
         <label>Entry Room (Fixed: 1)</label>
         <input type="text" value="1" readonly>
@@ -71,12 +69,12 @@
         <input type="number" id="bathroom" name="bathroom" required>
 
         <button type="submit">Generate</button>
+
     </form>
 
     <h3>Generated Floor Plan:</h3>
     <img id="plotImage" src="" style="display: none;" alt="Generated Floor Plan">
 
-    <!-- Download Button -->
     <a id="downloadBtn" href="/static/plot/2D/plot.png" download="floor_plan.png">
         <button>Download Floor Plan</button>
     </a>
@@ -103,5 +101,4 @@
         });
     </script>
 
-</body>
-</html>
+{% endblock %}

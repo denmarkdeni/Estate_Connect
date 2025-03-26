@@ -16,26 +16,28 @@
             <p>12</p>
         </div>
     </section>
-    <section class="table-section">
-        <h2>Recent Orders</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Product</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>#1001</td>
-                    <td>Smartphone</td>
-                    <td>Shipped</td>
-                    <td>March 10, 2025</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+
+    <h2>Recent Modification</h2>
+    <ul class="request-item">
+        {% for request in requests %}
+            <li>
+                <strong>{{ request.property.title }}</strong> - Modification requested by {{ request.customer.username }}<br>
+                Property Id: {{ request.property.id }} <br>
+                Description: {{ request.description }} <br>
+                Status: {{ request.status }}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="request_id" value="{{ request.id }}">
+                    <label>Update Status:</label>
+                    <select name="status">
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="rejected">Reject</option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
 
 {% endblock %}

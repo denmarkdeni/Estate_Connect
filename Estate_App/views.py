@@ -104,6 +104,7 @@ def user_profile(request):
             dealer.phone = request.POST.get("phone", dealer.phone)
             dealer.address = request.POST.get("address", dealer.address)
             dealer.save()
+            messages.success(request, "Profile updated successfully.")
             return redirect("user_profile") 
 
     elif user.userinfo.UserRole == "customer":
@@ -112,6 +113,7 @@ def user_profile(request):
             customer.phone = request.POST.get("phone", customer.phone)
             customer.address = request.POST.get("address", customer.address)
             customer.save()
+            messages.success(request, "Profile updated successfully.")
             return redirect("user_profile")
 
     elif user.userinfo.UserRole == "engineer":
@@ -120,6 +122,7 @@ def user_profile(request):
             engineer.expertise = request.POST.get("expertise", engineer.expertise)
             engineer.phone = request.POST.get("phone", engineer.phone)
             engineer.save()
+            messages.success(request, "Profile updated successfully.")
             return redirect("user_profile")
         
     return render(request, 'user_profile.html')
@@ -138,15 +141,36 @@ def approve_dealer(request, user_id):
     messages.success(request, f"{dealer.user.userinfo.fullname} has been approved!")
     return redirect("admin_dealers")
 
+def customer_dashboard(request):
+    return render(request, 'customer_dashboard.html')
+
 def property_list(request):
-    properties = Property.objects.all()  
-    return render(request, "property_list.html", {"properties": properties})
+    query = request.GET.get('q', '')  
+    properties = Property.objects.filter(status='available')
+
+    if query:
+        properties = properties.filter(
+            title__icontains=query
+        ) | properties.filter(
+            location__icontains=query
+        ) | properties.filter(
+            price__icontains=query
+        )
+
+    context = {
+        'properties': properties,
+        'query': query,
+    }
+    return render(request, "property_list.html", context)
+
+def property_details(request, property_id):
+    property = get_object_or_404(Property, id=property_id)
+    return render(request, 'property_details.html', {'property': property})
 
 @login_required 
 def dealer_dashboard(request):
-    person = User.objects.get(id=request.user.id)
     properties = Property.objects.filter(dealer=request.user)
-    return render(request, 'dealer_dashboard.html', {'person':person,'properties': properties})
+    return render(request, 'dealer_dashboard.html', {'properties': properties})
 
 def dealer_upload_property(request):
     if request.method == 'POST':
@@ -165,34 +189,11 @@ def dealer_upload_property(request):
             image=image
         )
         property_obj.save()
+        messages.success(request, 'Property uploaded successfully!')
         
         return redirect('dealer_dashboard')
     return render(request, 'dealer_upload_property.html')  
 
-def customer_dashboard(request):
-    query = request.GET.get('q', '')  # Get search query from the request
-    properties = Property.objects.filter(status='available')
-    person = User.objects.get(id=request.user.id)  
-
-    if query:
-        properties = properties.filter(
-            title__icontains=query
-        ) | properties.filter(
-            location__icontains=query
-        ) | properties.filter(
-            price__icontains=query
-        )
-
-    context = {
-        'properties': properties,
-        'query': query,
-        'person': person
-    }
-    return render(request, 'customer_dashboard.html', context)
-
-def property_details(request, property_id):
-    property = get_object_or_404(Property, id=property_id)
-    return render(request, 'property_details.html', {'property': property})
 
 @login_required
 def request_modification(request, property_id):
@@ -200,14 +201,14 @@ def request_modification(request, property_id):
 
     if request.method == "POST":
         description = request.POST.get("description")
-        modification = PropertyModification.objects.create(
+        PropertyModification.objects.create(
             customer=request.user,
             property=property,
             dealer=property.dealer,
             description=description
         )
         messages.success(request, "Your modification request has been submitted.")
-        return redirect('customer_dashboard')
+        return redirect(f'/property/{property_id}/')
 
     return render(request, "request_modification.html", {"property": property})
 
@@ -238,7 +239,6 @@ def dealer_manage_requests(request):
 @login_required
 def engineer_dashboard(request):
     requests = PropertyModification.objects.filter(engineer=request.user)
-    person = User.objects.get(id=request.user.id)
 
     if request.method == "POST":
         request_id = request.POST.get("request_id")
@@ -250,71 +250,25 @@ def engineer_dashboard(request):
         messages.success(request, "Status updated successfully.")
         return redirect("engineer_dashboard")
 
-    return render(request, "engineer_dashboard.html", {"requests": requests, "person": person})
+    return render(request, "engineer_dashboard.html", {"requests": requests})
 
-@login_required
-def update_profile(request):
-    user = request.user
-    dealer = None
-    engineer = None
+def upload_3d_model(request):
+    if request.method == 'POST':
+        property_id = request.POST.get('property_id')
+        model_3d = request.FILES.get('glb_model')
 
-    # Check if the user is a Dealer
-    if hasattr(user, 'dealer'):
-        dealer = user.dealer
+        property = Property.objects.get(id=property_id)
+        property.model_3d = model_3d
+        property.save()
+        
+        messages.success(request, '3D model uploaded successfully!')
+        return redirect('upload_3d_model')
+    properties = Property.objects.filter(status='available')
+    return render(request, 'upload_3d_model.html', {'properties': properties})
 
-    # Check if the user is an Engineer
-    elif hasattr(user, 'engineer'):
-        engineer = user.engineer
-
-    if request.method == "POST":
-        phone = request.POST.get("phone")
-        address = request.POST.get("address")
-
-        if dealer:
-            company_name = request.POST.get("company_name")
-            dealer.phone = phone
-            dealer.address = address
-            dealer.company_name = company_name
-            dealer.is_approved = False  # Reset approval on update
-            dealer.save()
-
-        elif engineer:
-            expertise = request.POST.get("expertise")
-            engineer.phone = phone
-            engineer.expertise = expertise
-            engineer.is_approved = False  # Reset approval on update
-            engineer.save()
-
-        messages.success(request, "Profile updated successfully. Awaiting admin approval.")
-        return redirect("dashboard")
-
-    return render(request, "update_profile.html", {"dealer": dealer, "engineer": engineer})
-
-@staff_member_required
-def verify_users(request):
-    dealers = Dealer.objects.filter(is_approved=False)
-    engineers = Engineer.objects.filter(is_approved=False)
-
-    if request.method == "POST":
-        user_id = request.POST.get("user_id")
-        role = request.POST.get("role")
-        action = request.POST.get("action")
-
-        if role == "dealer":
-            user_profile = Dealer.objects.get(id=user_id)
-        else:
-            user_profile = Engineer.objects.get(id=user_id)
-
-        if action == "approve":
-            user_profile.is_approved = True
-        else:
-            user_profile.is_approved = False
-
-        user_profile.save()
-        messages.success(request, "Verification updated successfully.")
-        return redirect("verify_users")
-
-    return render(request, "verify_users.html", {"dealers": dealers, "engineers": engineers})
+def model_3d(request, property_id):
+    property = get_object_or_404(Property, id=property_id)
+    return render(request, 'model_3d.html', {'property': property}) 
 
 # @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
@@ -332,8 +286,7 @@ def property_create(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def model_3d(request):
-    return render(request, 'model_3d.html')
+
 
 def generate_plan(request):
     return render(request, 'floor_plan.html')

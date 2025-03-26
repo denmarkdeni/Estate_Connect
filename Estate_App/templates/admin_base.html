@@ -353,6 +353,44 @@
       </div>
       <!-- page-body-wrapper ends -->
     </div>
+
+    <style>
+      .messages {
+        position: absolute;
+        top: 20px;
+        right: 35%;
+        background: #3498db;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        z-index: 9000;
+        transition: opacity 0.5s ease;
+      }
+    </style>
+
+    {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+              <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+      </ul>
+
+      <script>
+          // Wait for the page to load
+          document.addEventListener("DOMContentLoaded", function () {
+              setTimeout(function () {
+                  let messages = document.querySelector(".messages");
+                  if (messages) {
+                      messages.style.transition = "opacity 0.5s ease";
+                      messages.style.opacity = "0";
+                      setTimeout(() => messages.remove(), 500); // Remove from DOM after fading out
+                  }
+              }, 2000); // 2 seconds delay before fade out
+          });
+      </script> 
+    {% endif %}
+
+
     <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
