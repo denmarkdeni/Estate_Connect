@@ -16,12 +16,13 @@
             
             <ul>
                 {% if request.user.userinfo.UserRole == 'customer' %}
-                <a href="/dealer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
+                <a href="/customer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
                 <a href="/properties"><li><i class="fas fa-check"></i> Property List</li></a>
+                <a href="/engineers_list"><li><i class="fas fa-check"></i> Engineers List</li></a>
                 {% endif %}
                 
                 {% if request.user.userinfo.UserRole == 'engineer' %}
-                <a href="/dealer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
+                <a href="/engineer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
                 <a href="/properties"><li><i class="fas fa-check"></i> Property List</li></a>
                 <a href="/plot_2d"><li><i class="fas fa-shopping-cart"></i> 2D Design</li></a>
                 <a href="/upload_3d_model"><li><i class="fas fa-shopping-cart"></i> 3D Upload</li></a>
@@ -34,7 +35,6 @@
                 {% endif %}
                 
                 <a href="/user-profile"><li><i class="fas fa-user"></i> Profile</li></a>
-                <a href="/#"><li><i class="fas fa-cog"></i> Settings</li></a>
                 <a href="/logout"><li><i class="fas fa-cog"></i> Logout</li></a>
             </ul>
         </aside>
@@ -71,8 +71,7 @@
                         messages.style.opacity = "0";
                         setTimeout(() => messages.remove(), 500); // Remove from DOM after fading out
                     }
-                }, 2000); // 2 seconds delay before fade out
-            });
+                }, 2000); 
         </script>
     {% endif %}
 

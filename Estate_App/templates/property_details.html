@@ -21,6 +21,7 @@
                 {% endif %}
                 <br>
                 <a href="{% url 'request_modification' property.id %}" class="detail-btn">Request Modification</a>
+                <a href="{% url 'create_order' property.id %}" class="detail-btn">Pay & Register</a>
                 <a href="{% url 'property_list' %}" class="detail-btn">Back to Properties</a>
             </div>
         </div>

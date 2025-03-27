@@ -1,0 +1,44 @@
+{% extends "user_base.html" %} 
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Make Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<h2>Pay for {{ property.title }}</h2>
+<p>Amount: ₹{{ amount|floatformat:2 }}</p>
+
+<button id="pay-btn">Pay Now</button>
+
+<script>
+    var options = {
+        "key": "{{ RAZORPAY_KEY_ID }}",
+        "amount": "{{ amount }}",
+        "currency": "INR",
+        "order_id": "{{ order_id }}",
+        "name": "Estate Connect",
+        "description": "Payment for Property",
+        "handler": function (response) {
+            alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+            window.location.href = "/payment-success?payment_id=" + response.razorpay_payment_id;
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    document.getElementById('pay-btn').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+
+</body>
+</html>
+
+{% endblock %}

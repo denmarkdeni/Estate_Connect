@@ -1,0 +1,37 @@
+{% extends "user_base.html" %} 
+
+{% block content %}
+
+    <section class="table-section">
+        <h2>Engineers List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Expertise</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr> 
+                    {% for engineer in engineers %}
+                    <tr>
+                        <td>{{ engineer.user.userinfo.fullname }}</td>
+                        <td> {{ engineer.user.username }} </td>
+                        <td>{{ engineer.user.engineer.expertise }}</td>
+                        <td> {{ engineer.user.engineer.phone }} </td>
+                        <td> <a href='mailto:{{ engineer.user.email }}'>{{ engineer.user.email }}</a> </td>
+                        <td>
+                            <div class="badge badge-outline-success">Approved</div>
+                        </td>
+                    </tr>     
+                    {% endfor %}   
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+{% endblock %}

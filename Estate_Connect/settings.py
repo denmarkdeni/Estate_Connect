@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
+import os 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,9 +28,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# API Keys 
+RAZORPAY_KEY_ID = 'rzp_test_HFvEboyqG0tXdU'
+RAZORPAY_KEY_SECRET = '8P7XDnS7tKMeenNuW3KGjyT7'
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Estate_App',
     'rest_framework',
-    'django.contrib.sites',  # Required for django-allauth
+    'django.contrib.sites', 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

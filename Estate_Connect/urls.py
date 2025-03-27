@@ -43,16 +43,17 @@ urlpatterns = [
 
     path('user-profile/', views.user_profile, name='user_profile'),
     path('properties/', views.property_list, name='property_list'),
+    path('engineers_list/', views.engineers_list, name='engineers_list'),
     path('property/<int:property_id>/', views.property_details, name='property_details'),
     path('model_3d/<int:property_id>/', views.model_3d, name='model_3d'),
 
     path('dealer_upload_property/', views.dealer_upload_property, name='dealer_upload_property'),
     path('upload_3d_model/', views.upload_3d_model, name='upload_3d_model'),
 
-    # path('api/properties/', views.property_list, name='property_list'),
-    path('api/properties/create/', views.property_create, name='property_create'),
     path('request-modification/<int:property_id>/', views.request_modification, name='request_modification'),
     path('dealer/manage-requests/', views.dealer_manage_requests, name='dealer_manage_requests'),
+    path('/create_order/<property_id>/', views.create_order, name='create_order'),
+    path('payment-success/', views.payment_success, name='payment_success'),
 
     path('generate-plan/', views.generate_plan, name='generate_plan'),  
     path("floor-plan/", views.floor_plan_view, name="floor_plan"),

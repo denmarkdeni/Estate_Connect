@@ -144,6 +144,10 @@ def approve_dealer(request, user_id):
 def customer_dashboard(request):
     return render(request, 'customer_dashboard.html')
 
+def engineers_list(request):
+    engineers = Engineer.objects.filter(is_approved=True)
+    return render(request, 'engineers_list.html',{'engineers' : engineers})
+
 def property_list(request):
     query = request.GET.get('q', '')  
     properties = Property.objects.filter(status='available')
@@ -270,23 +274,35 @@ def model_3d(request, property_id):
     property = get_object_or_404(Property, id=property_id)
     return render(request, 'model_3d.html', {'property': property}) 
 
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def property_list(request):
-#     properties = Property.objects.all()
-#     serializer = PropertySerializer(properties, many=True)
-#     return Response(serializer.data)
+import razorpay
+from django.conf import settings
+from django.shortcuts import render
+from django.http import JsonResponse
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def property_create(request):
-    serializer = PropertySerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(dealer=request.user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+def create_order(request, property_id):
+    property_obj = Property.objects.get(id=property_id) 
+    amount = int(property_obj.price * 100) 
+    amount = 1000
 
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    payment_data = {
+        "amount": amount,
+        "currency": "INR",
+        "payment_capture": 1
+    }
+    order = client.order.create(data=payment_data)
 
+    context = {
+        "amount": amount,
+        "order_id": order["id"],
+        "property": property_obj,
+        "RAZORPAY_KEY_ID": settings.RAZORPAY_KEY_ID
+    }
+    return render(request, "payment_page.html", context)
+
+def payment_success(request):
+    payment_id = request.GET.get("payment_id")
+    return render(request, "payment_success.html", {"payment_id": payment_id})
 
 def generate_plan(request):
     return render(request, 'floor_plan.html')
