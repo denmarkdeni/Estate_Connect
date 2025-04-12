@@ -4,20 +4,38 @@ from django.contrib.auth import authenticate, login, logout
 from .models import UserInfo, Property, PropertyModification, Dealer, Engineer, Customer, FloorPlan
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
-from .serializers import PropertySerializer
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from .floor_plan import generate_dynamic_floor_plan,generate_realistic_floor_plan
 from .plot_plan import generate_floor_plan, plot_floor_plan
 from django.http import JsonResponse
 import plotly.graph_objects as go
+import json
 
 def index(request):
-    return render(request,'index.html')
+    return render(request, 'index.html')
+
+def search_engineers(request):
+    try:
+        data = json.loads(request.body)
+        location = data.get('location', '').strip().lower()
+        engineers = Engineer.objects.filter(location__icontains=location, is_approved=True)
+        
+        engineer_list = []
+        for eng in engineers:
+            engineer_list.append({
+                "user": {
+                    "username": eng.user.username,
+                    "email": eng.user.email,
+                },
+                "specialization": eng.expertise if hasattr(eng, 'expertise') else "General",
+                "place": eng.location,
+            })
+
+        return JsonResponse({"engineers": engineer_list}, status=200)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 def register_view(request):
     if request.method == 'POST':
@@ -94,6 +112,10 @@ def admin_customers(request):
     customers = Customer.objects.all()
     return render(request, 'admin_customers.html', {'customers': customers})
 
+def admin_properties(request):
+    properties = Property.objects.all()
+    return render(request, 'admin_properties.html', {'properties': properties})
+
 def user_profile(request):
     user = request.user  # Get logged-in user
     
@@ -121,6 +143,7 @@ def user_profile(request):
         if request.method == "POST":
             engineer.expertise = request.POST.get("expertise", engineer.expertise)
             engineer.phone = request.POST.get("phone", engineer.phone)
+            engineer.location = request.POST.get("location", engineer.location).strip().lower()
             engineer.save()
             messages.success(request, "Profile updated successfully.")
             return redirect("user_profile")
@@ -131,7 +154,15 @@ def approve_engineer(request, user_id):
     engineer = get_object_or_404(Engineer, user_id=user_id)
     engineer.is_approved = True  
     engineer.save()
-    messages.success(request, f"{engineer.user.userinfo.fullname} has been approved!")
+    messages.success(request, f"{engineer.user.userinfo.fullname} has been approved! ✔")
+    return redirect("admin_engineers")
+
+def remove_engineer(request, user_id):
+    engineer = get_object_or_404(Engineer, user_id=user_id)
+    user = User.objects.get(engineer=engineer)
+    name =user.userinfo.fullname
+    user.delete()
+    messages.success(request, f"{name} has been removed! ❌")
     return redirect("admin_engineers")
 
 def approve_dealer(request, user_id):
@@ -140,6 +171,35 @@ def approve_dealer(request, user_id):
     dealer.save()
     messages.success(request, f"{dealer.user.userinfo.fullname} has been approved!")
     return redirect("admin_dealers")
+
+def remove_dealer(request, user_id):
+    dealer = get_object_or_404(Dealer, user_id=user_id)
+    user = User.objects.get(dealer=dealer)
+    name =user.userinfo.fullname
+    user.delete()
+    messages.success(request, f"{name} has been removed! ❌")
+    return redirect("admin_dealers")
+
+def remove_customer(request, user_id):
+    customer = get_object_or_404(Customer, user_id=user_id)
+    user = User.objects.get(customer=customer)
+    name =user.userinfo.fullname
+    user.delete()
+    messages.success(request, f"{name} has been removed! ❌")
+    return redirect("admin_customers")
+
+def approve_property(request, property_id):
+    property = Property.objects.get(id=property_id)
+    property.status = "approved"
+    property.save()
+    messages.success(request, "Property Approved!")
+    return redirect("admin_properties")
+
+def remove_property(request, property_id):
+    property = Property.objects.get(id=property_id)
+    property.delete()
+    messages.success(request, "Property Removed!")
+    return redirect("admin_properties")
 
 def customer_dashboard(request):
     return render(request, 'customer_dashboard.html')
@@ -150,7 +210,7 @@ def engineers_list(request):
 
 def property_list(request):
     query = request.GET.get('q', '')  
-    properties = Property.objects.filter(status='available')
+    properties = Property.objects.filter(status='approved')
 
     if query:
         properties = properties.filter(
@@ -301,8 +361,15 @@ def create_order(request, property_id):
     return render(request, "payment_page.html", context)
 
 def payment_success(request):
+    property_id = request.GET.get("property_id")
+    property =  Property.objects.get(id=property_id)
+    property.status = 'pending'
+    property.registered_to = request.user
+    property.save()
+    messages.success(request, "Registered Successfully!")
+    
     payment_id = request.GET.get("payment_id")
-    return render(request, "payment_success.html", {"payment_id": payment_id})
+    return render(request, "payment_success.html", {"payment_id": payment_id,"property": property})
 
 def generate_plan(request):
     return render(request, 'floor_plan.html')
@@ -368,3 +435,30 @@ def plot_3d(request):
     plot_div = fig.to_html(full_html=False)
     
     return render(request, "plot_3d.html", {"plot_div": plot_div})
+
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from django.conf import settings
+import os
+
+model_path = os.path.join(settings.BASE_DIR, "construction-estimator\\")
+
+tokenizer = AutoTokenizer.from_pretrained(model_path)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
+
+def input_page(request):
+    prediction = None
+
+    if request.method == "POST":
+        land_size = request.POST.get("land_size")
+        location = request.POST.get("location")
+        building_type = request.POST.get("building_type")
+        floors = request.POST.get("floors")
+
+        input_text = f"Land: {land_size} sqft, Location: {location}, Type: {building_type}, Floors: {floors}"
+        inputs = tokenizer(input_text, return_tensors="pt", truncation=True)
+        output = model.generate(**inputs, max_new_tokens=100)
+        prediction = tokenizer.decode(output[0], skip_special_tokens=True)
+        prediction = prediction.replace("?", "₹")
+    
+        return render(request, "estimator_app/input_page.html", {"prediction": prediction, "land_size": land_size, "location": location, "building_type": building_type, "floors": floors})
+    return render(request, "estimator_app/input_page.html", {"prediction": prediction})

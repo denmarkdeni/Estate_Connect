@@ -1,0 +1,76 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<style>
+    .action{
+        display:flex;
+        gap:10px;
+    }
+    #remove-btn:hover{
+        background-color: red;
+    }
+</style>
+
+    <div class="container">
+
+        <div class="row ">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Properties List</h4>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Property</th>
+                                        <th>Price</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for property in properties %}
+                                    <tr>
+                                        <td>{{ property.title }}</td>
+                                        <td> {{ property.price }} </td>
+                                        <td>{{ property.location }}</td>
+                                        <td> 
+                                            {% if property.status == 'approved' %}
+                                                <div class="badge badge-outline-success">Approved</div>
+                                            {% else %}
+                                                {{ property.status }}
+                                            {% endif %}
+                                        </td>
+                                        <td><div class="action">
+                                            {% if property.status == 'available' %}
+                                            <form method="POST" action="{% url 'approve_property' property.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-success btn-sm" >Approve</button>
+                                            </form>
+                                            {% endif %}
+                                            <form method="POST" action="{% url 'remove_property' property.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" id="remove-btn" class="btn btn-success btn-sm" style="background-color:#d73d3d;border:1px solid #d73d3d">Remove</button>
+                                            </form>
+
+                                            </div>
+                                        </td>
+                                    </tr>     
+                                    {% endfor %}                     
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+
+    

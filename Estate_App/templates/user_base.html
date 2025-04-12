@@ -19,6 +19,7 @@
                 <a href="/customer-dashboard"><li><i class="fas fa-home"></i> Home</li></a>
                 <a href="/properties"><li><i class="fas fa-check"></i> Property List</li></a>
                 <a href="/engineers_list"><li><i class="fas fa-check"></i> Engineers List</li></a>
+                <a href="/input_page"><li><i class="fas fa-check"></i> Estate Idea</li></a>
                 {% endif %}
                 
                 {% if request.user.userinfo.UserRole == 'engineer' %}
@@ -47,11 +48,12 @@
                     </a>
                 </div>
             </header>
+            <div class="content-header">
             
             {% block content %}
 
             {% endblock %}
-
+            </div>
         </main>
     </div>
     {% if messages %}

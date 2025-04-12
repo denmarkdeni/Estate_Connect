@@ -212,6 +212,133 @@
 		</div>
 	</section>
 
+	<script>
+		#engineer-results::-webkit-scrollbar {
+			width: 8px;
+		}
+		
+		#engineer-results::-webkit-scrollbar-thumb {
+			background-color: #249fa1;
+			border-radius: 10px;
+		}
+		
+		#engineer-results::-webkit-scrollbar-track {
+			background: transparent;
+		}		
+	</script>
+
+	<section id="engineer-search" class="scrollspy-section bg-gradient padding-large" 
+		style="background: url('static/images/arj.jpg') no-repeat center center/cover; 
+		padding-top: 80px; padding-bottom: 80px; display: flex; justify-content: center;">
+		
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-8">
+					<div class="left-content text-center">
+						<div class="section-header">
+							<h2 class="section-title light" 
+								style="color: #ffffff; font-size: 36px; font-weight: bold; margin-bottom: 20px;">
+								Find Engineers Near You
+							</h2>
+						</div>
+
+						<!-- Search Form -->
+						<form id="engineer-search-form" class="form-light mx-auto" method="POST" 
+							style="background-color: rgba(100, 100, 100, 0.5); padding: 40px; border-radius: 15px; 
+							box-shadow: 0 0 30px skyblue; max-width: 600px; text-align: left;">
+							{% csrf_token %}
+							<!-- Input for Location -->
+							<div class="form-group">
+								<input type="text" name="location" class="form-control" placeholder="Enter a location (e.g., Varkala)" required 
+									style="width: 100%; border-radius: 25px; border: 2px solid #249fa1; padding: 12px; 
+									box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); transition: all 0.3s;">
+							</div>
+
+							<!-- Search Button -->
+							<button type="submit" class="btn btn-accent btn-lg btn-block"
+								onmouseover="this.style.backgroundColor='rgb(8, 67, 68)'" 
+								onmouseout="this.style.backgroundColor= '#249fa1'"
+								style="background-color: #249fa1; color: white; border-radius: 30px; padding: 15px 30px; 
+								font-size: 18px; transition: background-color 0.3s, transform 0.2s; width: 100%;">
+								Search Engineers
+							</button>
+						</form>
+
+						<!-- Search Results -->
+						<div id="engineer-results" class="text-left mt-4"
+							style="background-color: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; color: white;
+								max-height: 300px; overflow-y: auto;">
+
+							<table style="width: 100%; border-collapse: collapse; color: white;">
+								<thead>
+									<tr style="border-bottom: 2px solid #249fa1;">
+										<th style="padding: 10px;">👤 Name</th>
+										<th style="padding: 10px;">📍 Place</th>
+										<th style="padding: 10px;">🔧 Specialization</th>
+									</tr>
+								</thead>
+								<tbody id="engineer-table-body">
+									<tr><td colspan="3">🔍 Search results will appear here...</td></tr>
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		// JavaScript to handle the search form submission
+		document.getElementById('engineer-search-form').addEventListener('submit', function(event) {
+			event.preventDefault(); 
+
+			// Get the location input value
+			var location = document.querySelector('input[name="location"]').value;
+
+			// Perform an AJAX request to fetch engineers based on the location
+			fetch('/search-engineers/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': '{{ csrf_token }}'
+				},
+				body: JSON.stringify({ location: location })
+			})
+			.then(response => response.json())
+			.then(data => { 
+
+				var tableBody = document.getElementById('engineer-table-body');
+				tableBody.innerHTML = ''; 
+
+				if (data.engineers && data.engineers.length > 0) {
+					data.engineers.forEach(engineer => {
+						var row = document.createElement('tr');
+
+						row.innerHTML = `
+							<td style="padding: 10px; border-bottom: 1px solid #ccc;">${engineer.user.username}</td>
+							<td style="padding: 10px; border-bottom: 1px solid #ccc;">${engineer.place}</td>
+							<td style="padding: 10px; border-bottom: 1px solid #ccc;">${engineer.specialization}</td>
+						`;
+
+						tableBody.appendChild(row);
+					});
+				} else {
+					tableBody.innerHTML = `<tr><td colspan="3" style="padding: 10px;">No engineers found in this location.</td></tr>`;
+				}
+
+			})
+			.catch(error => {
+				console.error('Error fetching engineers:', error);
+				var resultsContainer = document.getElementById('engineer-results');
+				resultsContainer.innerHTML = '<p style="color: #ffffff;">An error occurred while searching for engineers.</p>';
+			});
+			
+		});
+	</script>
+
+
 	<section id="portfolio" class="scrollspy-section bg-dark padding-large">
 		<div class="container">
 

@@ -38,6 +38,7 @@ class Engineer(models.Model):
     expertise = models.CharField(max_length=255)
     phone = models.CharField(max_length=15)
     is_approved = models.BooleanField(default=False)
+    location = models.CharField(max_length=255,default="")
 
     def __str__(self):
         return self.user.username
@@ -48,6 +49,7 @@ class Property(models.Model):
         ('available', 'Available'),
         ('sold', 'Sold'),
         ('pending', 'Pending'),
+        ('approved', 'Approved'),
     ]
     dealer = models.ForeignKey(User, on_delete=models.CASCADE) 
     title = models.CharField(max_length=255)
@@ -58,6 +60,8 @@ class Property(models.Model):
     model_3d = models.FileField(upload_to='models/', null=True, blank=True) 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
     created_at = models.DateTimeField(auto_now_add=True)
+    registered_to = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True,related_name='property_registered')
+    sold_to = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True,related_name='property_sold')
 
     def __str__(self):
         return self.title

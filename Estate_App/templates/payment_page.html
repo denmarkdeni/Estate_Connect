@@ -7,14 +7,23 @@
 <head>
     <title>Make Payment</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        #super{
+            width:200px;
+        }
+    </style>
 </head>
 <body>
-
-<h2>Pay for {{ property.title }}</h2>
-<p>Amount: ₹{{ amount|floatformat:2 }}</p>
-
-<button id="pay-btn">Pay Now</button>
-
+    <div class="property-container">
+        <div class="property-card">
+            <img id ="super" src="/static/images/oh_super.jpg" alt="img not available">
+            <h2>Pay for {{ property.title }}</h2><br>
+            <p>Register with Amount:<b> ₹{% widthratio amount 100 1 %}<b></p><br>
+            <p style="font-size:18px;color:green;">Book Now For Your Property</p><br>
+            ➡➡➡➡➡➡
+            <button id="pay-btn" class="detail-btn">Pay Now</button>
+        </div>
+    </div>
 <script>
     var options = {
         "key": "{{ RAZORPAY_KEY_ID }}",
@@ -25,7 +34,7 @@
         "description": "Payment for Property",
         "handler": function (response) {
             alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
-            window.location.href = "/payment-success?payment_id=" + response.razorpay_payment_id;
+            window.location.href = "/payment-success?property_id={{ property.id }}&payment_id=" + response.razorpay_payment_id;
         },
         "theme": {
             "color": "#3399cc"

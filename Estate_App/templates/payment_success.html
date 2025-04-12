@@ -1,11 +1,22 @@
+{% extends "user_base.html" %} 
+
+{% block content %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Payment Successful</title>
 </head>
 <body>
-    <h2>Payment Successful!</h2>
-    <p>Payment ID: {{ payment_id }}</p>
-    <a href="/">Go to Home</a>
+    <div class="property-container">
+        <div class="property-card">
+            <h2>Payment Successful!</h2><br>
+            <p>Payment ID: {{ payment_id }}</p><br>
+            <p>You Registered the Property: {{ property.title }}</p><br>
+            <a href="/customer-dashboard">Go to Dashboard</a>
+        </div>
+    </div>
 </body>
 </html>
+
+{% endblock %}

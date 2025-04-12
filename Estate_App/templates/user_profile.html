@@ -186,6 +186,10 @@
                 <label for="phone">Phone Number</label>
                 <input type="tel" id="phone" name="phone" value="{{ request.user.engineer.phone }}" required>
             </div>
+            <div class="form-group">
+                <label for="phone">Location</label>
+                <input type="text" id="location" name="location" value="{{ request.user.engineer.location }}" required>
+            </div>
             <button type="submit">Save Profile</button>
         </form>
         {% endif %}

@@ -19,7 +19,6 @@ from django.urls import path, include
 from Estate_App import views
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from Estate_App.floor_plan import generate_blueprint, generate_3d
 
 urlpatterns = [
@@ -33,9 +32,15 @@ urlpatterns = [
     path('admin-engineers/', views.admin_engineers, name='admin_engineers'),
     path('admin-dealers/', views.admin_dealers, name='admin_dealers'),
     path('admin-customers/', views.admin_customers, name='admin_customers'),
+    path('admin-properties/', views.admin_properties, name='admin_properties'),
 
     path("engineers/approve/<int:user_id>/", views.approve_engineer, name="approve_engineer"),
     path("dealers/approve/<int:user_id>/", views.approve_dealer, name="approve_dealer"),
+    path("engineers/remove/<int:user_id>/", views.remove_engineer, name="remove_engineer"),
+    path("dealers/remove/<int:user_id>/", views.remove_dealer, name="remove_dealer"),
+    path("customers/remove/<int:user_id>/", views.remove_customer, name="remove_customer"),
+    path("properties/approve/<int:property_id>/", views.approve_property, name="approve_property"),
+    path("properties/remove/<int:property_id>/", views.remove_property, name="remove_property"),
 
     path('dealer-dashboard/', views.dealer_dashboard, name='dealer_dashboard'),
     path('customer-dashboard/', views.customer_dashboard, name='customer_dashboard'),
@@ -52,7 +57,7 @@ urlpatterns = [
 
     path('request-modification/<int:property_id>/', views.request_modification, name='request_modification'),
     path('dealer/manage-requests/', views.dealer_manage_requests, name='dealer_manage_requests'),
-    path('/create_order/<property_id>/', views.create_order, name='create_order'),
+    path('create_order/<property_id>/', views.create_order, name='create_order'),
     path('payment-success/', views.payment_success, name='payment_success'),
 
     path('generate-plan/', views.generate_plan, name='generate_plan'),  
@@ -66,13 +71,11 @@ urlpatterns = [
     path("plot_2d/", views.plot_2d, name="plot_2d"),
     path("plot_3d/", views.plot_3d, name="plot_3d"),
 
-    path('accounts/', include('allauth.urls')),
+    path("input_page/", views.input_page, name="input_page"),
+    path("search-engineers/", views.search_engineers, name="search_engineers"),
 
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns += [
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-]
+

@@ -4,6 +4,16 @@
 
 {% load static %}
 
+<style>
+    .action{
+        display:flex;
+        gap:10px;
+    }
+    #remove-btn:hover{
+        background-color: red;
+    }
+</style>
+
     <div class="container">
 
         <div class="row ">
@@ -20,6 +30,7 @@
                                         <th>Phone</th>
                                         <th>Email</th>
                                         <th>Address</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -30,6 +41,12 @@
                                         <td> {{ customer.phone }} </td>
                                         <td> {{ customer.user.email }} </td>
                                         <td> {{ customer.address }} </td>
+                                        <td>
+                                            <form method="POST" action="{% url 'remove_customer' customer.user.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" id="remove-btn" class="btn btn-success btn-sm" style="background-color:#d73d3d;border:1px solid #d73d3d">Remove</button>
+                                            </form>
+                                        </td>
                                     </tr>     
                                     {% endfor %}                     
                                 </tbody>

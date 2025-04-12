@@ -4,6 +4,16 @@
 
 {% load static %}
 
+<style>
+    .action{
+        display:flex;
+        gap:10px;
+    }
+    #remove-btn:hover{
+        background-color: red;
+    }
+</style>
+
     <div class="container">
 
         <div class="row ">
@@ -20,7 +30,7 @@
                                         <th>Expertise</th>
                                         <th>Phone</th>
                                         <th>Email</th>
-                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -31,8 +41,13 @@
                                         <td>{{ engineer.user.engineer.expertise }}</td>
                                         <td> {{ engineer.user.engineer.phone }} </td>
                                         <td> {{ engineer.user.email }} </td>
-                                        <td>
+                                        <td><div class="action">
                                             <div class="badge badge-outline-success">Approved</div>
+                                            <form method="POST" action="{% url 'remove_engineer' engineer.user.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" id="remove-btn" class="btn btn-success btn-sm" style="background-color:#d73d3d;border:1px solid #d73d3d">Remove</button> 
+                                            </form>
+                                            </div>
                                         </td>
                                     </tr>     
                                     {% endfor %}                     
@@ -58,7 +73,7 @@
                                         <th>Expertise</th>
                                         <th>Phone</th>
                                         <th>Email</th>
-                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -70,13 +85,18 @@
                                         <td>{{ engineer.user.engineer.expertise }}</td>
                                         <td> {{ engineer.user.engineer.phone }} </td>
                                         <td> {{ engineer.user.email }} </td>
-                                        <td>
+                                        <td><div class="action">
                                             {% if not engineer.is_approved %}
                                             <form method="POST" action="{% url 'approve_engineer' engineer.user.id %}">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-success btn-sm">Approve</button> 
                                             </form>
+                                            <form method="POST" action="{% url 'remove_engineer' engineer.user.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" id="remove-btn" class="btn btn-success btn-sm" style="background-color:#d73d3d;border:1px solid #d73d3d">Remove</button> 
+                                            </form>
                                             {% endif %}
+                                            </div>
                                         </td>
                                     </tr>     
                                     {% endfor %}   

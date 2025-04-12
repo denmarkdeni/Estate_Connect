@@ -1,0 +1,103 @@
+{% extends 'user_base.html' %}  
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Construction Estimator</title>
+    <style>
+        .content-header{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f7f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        h3 {
+            color: #28a745;
+            text-align: center;
+        }
+
+        p {
+            background: #e9f7ef;
+            padding: 12px;
+            border-left: 5px solid #28a745;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+<div class="content-header">
+    <div class="container">
+        <h2>🏗️ AI Construction Estimator</h2>
+        <form action="{% url 'input_page' %}" method="post">
+            {% csrf_token %}
+            <label>Land Size (sqft):</label>
+            <input type="number" name="land_size" value="{{ land_size|default:'' }}" required>
+
+            <label>Location:</label>
+            <input type="text" name="location" value="{{ location|default:'' }}" required>
+
+            <label>Building Type:</label>
+            <input type="text" name="building_type" value="{{ building_type|default:'' }}" required>
+
+            <label>Number of Floors:</label>
+            <input type="number" name="floors" value="{{ floors|default:'' }}" required>
+
+            <button type="submit">Get Estimate</button>
+        </form><br>
+
+        {% if prediction %}
+            <h3>AI Prediction:</h3>
+            <p>{{ prediction }}</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
