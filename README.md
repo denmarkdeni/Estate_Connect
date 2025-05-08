@@ -3,11 +3,6 @@
   A Real Estate Web Platform to Seamlessly Connect Dealers, Customers & Engineers.
 </p>
 
-## 🚀 Installation  Before the set up Instruction
-
-- 🧠 install VS 2022 C++ Compiler from C++ development tools 
-- 🏗️ verify the installation
-- 💡 Install Python 3.11.5
 
 ## ⚙️ Setup Instructions
 
